@@ -1,221 +1,949 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#080a12">
-<title>ZYVIX · For You</title>
-<style>
-:root{--bg:#080a12;--panel:#121522;--text:#f8f8ff;--muted:#b3b6c8;--purple:#a855f7;--cyan:#42e8ff;--line:#ffffff22}
-*{box-sizing:border-box}
-html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-body{overflow:hidden}
-.top{height:58px;position:fixed;inset:0 0 auto;z-index:20;display:flex;align-items:center;justify-content:center;background:linear-gradient(#05060ce8,transparent);padding-top:env(safe-area-inset-top)}
-.logo{position:absolute;left:15px;font-weight:950;letter-spacing:2px;font-size:19px;background:linear-gradient(90deg,var(--cyan),var(--purple));color:transparent;background-clip:text}
-.feed-tabs{display:flex;gap:22px;height:100%;align-items:center}
-.feed-tabs button{border:0;background:none;color:#c2c4d1;font-size:14px;font-weight:750;padding:9px 2px;position:relative}
-.feed-tabs button.active{color:#fff}
-.feed-tabs button.active:after{content:"";height:3px;border-radius:9px;background:var(--cyan);position:absolute;bottom:-2px;left:15%;right:15%}
-.search{position:absolute;right:14px;border:0;background:#ffffff18;color:white;border-radius:50%;width:35px;height:35px;font-size:17px}
-.feed{height:100dvh;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior-y:contain;scrollbar-width:none}
-.feed::-webkit-scrollbar{display:none}
-.post{height:100dvh;min-height:540px;position:relative;scroll-snap-align:start;scroll-snap-stop:always;overflow:hidden;background:#101322}
-.art{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(ellipse at 60% 30%,#7c3aed99,transparent 35%),radial-gradient(ellipse at 25% 70%,#0ea5e955,transparent 36%),linear-gradient(140deg,#141629,#080a12 70%)}
-.art:before{content:"";position:absolute;width:78vw;height:78vw;max-width:520px;max-height:520px;border-radius:50%;border:1px solid #ffffff20;box-shadow:0 0 0 35px #ffffff05,0 0 0 75px #ffffff04,0 0 100px #a855f733;transform:rotate(-20deg)}
-.art:after{content:"";position:absolute;width:65%;height:20%;background:#a855f722;filter:blur(40px);bottom:16%;left:18%}
-.art.fire{background:radial-gradient(ellipse at 55% 42%,#fb923c88,transparent 27%),radial-gradient(ellipse at 50% 80%,#ef444466,transparent 36%),linear-gradient(150deg,#2b1022,#090a13 70%)}
-.art.fortnite{background:radial-gradient(ellipse at 50% 38%,#38bdf877,transparent 31%),radial-gradient(ellipse at 75% 70%,#a855f755,transparent 32%),linear-gradient(140deg,#111a39,#090a13 75%)}
-.art.roblox{background:radial-gradient(ellipse at 50% 42%,#f472b677,transparent 30%),radial-gradient(ellipse at 25% 72%,#fb923c55,transparent 30%),linear-gradient(140deg,#29122a,#090a13 75%)}
-.game-art{position:relative;z-index:1;text-align:center;padding:24px;max-width:90%;transform:translateY(-28px)}
-.game-icon{font-size:clamp(74px,18vw,145px);filter:drop-shadow(0 12px 28px #0009);line-height:1.2}
-.game-title{font-size:clamp(32px,9vw,64px);font-weight:1000;letter-spacing:-2px;line-height:1;margin-top:12px;text-shadow:0 4px 24px #0008}
-.game-sub{font-size:12px;letter-spacing:4px;font-weight:800;color:#d6d8ff;margin-top:14px}
-.shade{position:absolute;inset:30% 0 0;background:linear-gradient(transparent,#05060b22 15%,#05060bd9 80%,#05060b 100%)}
-.side{position:absolute;right:12px;bottom:calc(86px + env(safe-area-inset-bottom));z-index:5;display:flex;flex-direction:column;align-items:center;gap:18px}
-.creator{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:18px;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#080a12;border:2px solid white;position:relative;margin-bottom:4px}
-.creator:after{content:"+";position:absolute;bottom:-9px;background:#fe2c55;color:white;border-radius:50%;width:19px;height:19px;display:grid;place-items:center;font-size:15px;font-weight:900}
-.action{border:0;background:none;color:white;display:flex;flex-direction:column;align-items:center;gap:4px;padding:0;min-width:45px;text-shadow:0 2px 7px #000}
-.action .ico{font-size:29px;line-height:1.1;filter:drop-shadow(0 2px 5px #0007)}
-.action small{font-size:11px;font-weight:700}
-.action.liked .ico{color:#ff3f71;animation:pop .18s ease-out}
-.action.saved .ico{color:#ffe66d}
-@keyframes pop{50%{transform:scale(1.25)}}
-.details{position:absolute;z-index:4;left:16px;right:78px;bottom:calc(84px + env(safe-area-inset-bottom));text-shadow:0 2px 10px #000b}
-.tag{display:inline-flex;align-items:center;gap:6px;background:#ffffff19;border:1px solid #ffffff26;padding:6px 9px;border-radius:7px;font-size:11px;font-weight:800;margin-bottom:10px;backdrop-filter:blur(8px)}
-.username{font-weight:850;font-size:15px;margin-bottom:8px}
-.caption{font-size:14px;line-height:1.45;margin:0 0 12px;white-space:pre-line}
-.music{font-size:12px;display:flex;align-items:center;gap:8px;overflow:hidden;white-space:nowrap}
-.music span{display:inline-block;animation:move 8s linear infinite}
-@keyframes move{0%,15%{transform:translateX(0)}85%,100%{transform:translateX(-12%)}}
-.bottom{height:calc(62px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);position:fixed;z-index:25;bottom:0;left:0;right:0;background:#080a12f5;border-top:1px solid #ffffff12;display:flex;align-items:center;justify-content:space-around}
-.navitem{color:#aeb2c6;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;min-width:48px}
-.navitem b{font-size:22px;line-height:1.1}
-.navitem.active{color:white}
-.navitem.active b{color:var(--cyan)}
-.create{font-size:25px!important;width:42px;height:29px;border-radius:9px;background:linear-gradient(90deg,var(--cyan),#fff,var(--purple));color:#080a12!important;display:grid;place-items:center}
-.toast{position:fixed;z-index:40;top:72px;left:50%;transform:translateX(-50%);padding:10px 14px;border-radius:10px;background:#22263a;color:white;font-size:13px;display:none;max-width:85%;text-align:center}
-.toast.show{display:block}
-.comment-panel{position:fixed;z-index:35;left:0;right:0;bottom:0;max-height:65dvh;background:#141827;border-radius:20px 20px 0 0;border:1px solid #ffffff20;padding:18px;display:none}
-.comment-panel.show{display:block}
-.comment-panel h3{margin:0 0 12px}
-.comment-panel p{color:var(--muted);font-size:13px;line-height:1.5}
-.comment-panel button{background:#252a40;color:white;border:0;border-radius:9px;padding:9px 13px}
-@media(min-width:700px){.post{max-width:480px;margin:auto;border-left:1px solid #ffffff12;border-right:1px solid #ffffff12}.top{background:#080a12f0}.bottom{max-width:480px;left:50%;transform:translateX(-50%);border-left:1px solid #ffffff12;border-right:1px solid #ffffff12}.logo{left:max(15px,calc((100vw - 450px)/2))}.search{right:max(14px,calc((100vw - 450px)/2))}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZYVIX — For You</title>
+  <meta name="theme-color" content="#09090f">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --bg: #09090f;
+      --panel: #12121d;
+      --panel2: #191927;
+      --text: #f5f5ff;
+      --muted: #9292a8;
+      --purple: #8b5cf6;
+      --pink: #ed4bff;
+      --border: #29293a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+    }
+
+    button, textarea, select { font: inherit; }
+    button { cursor: pointer; }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .topbar {
+      height: 62px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      background: rgba(9, 9, 15, .94);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: 900;
+      letter-spacing: -1.3px;
+    }
+
+    .logo span {
+      color: var(--pink);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .icon-btn {
+      background: var(--panel2);
+      color: white;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 9px 12px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 210px minmax(0, 650px) 240px;
+      gap: 22px;
+      justify-content: center;
+      max-width: 1180px;
+      padding: 22px 16px 100px;
+      margin: auto;
+    }
+
+    .sidebar, .rightbar {
+      position: sticky;
+      top: 82px;
+      align-self: start;
+    }
+
+    .side-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 12px;
+      margin-bottom: 5px;
+      border-radius: 13px;
+      color: #c7c7d8;
+      font-weight: 650;
+    }
+
+    .side-link:hover, .side-link.active {
+      background: #20182f;
+      color: white;
+    }
+
+    .side-icon { font-size: 21px; }
+
+    .side-note, .right-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      padding: 16px;
+      margin-top: 20px;
+    }
+
+    .side-note p, .right-card p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .feed-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 18px;
+    }
+
+    .feed-tab {
+      padding: 13px 3px;
+      background: none;
+      color: var(--muted);
+      border: 0;
+      border-bottom: 2px solid transparent;
+      font-weight: 750;
+    }
+
+    .feed-tab.active {
+      color: white;
+      border-bottom-color: var(--pink);
+    }
+
+    .composer, .post, .empty-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      margin-bottom: 17px;
+      overflow: hidden;
+    }
+
+    .composer { padding: 16px; }
+
+    .composer-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 43px;
+      height: 43px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .composer textarea {
+      width: 100%;
+      min-height: 70px;
+      resize: vertical;
+      margin-top: 13px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      background: #0c0c15;
+      color: white;
+      padding: 13px;
+      outline: none;
+    }
+
+    .composer textarea:focus, .comment-input:focus {
+      border-color: var(--purple);
+    }
+
+    .composer-bottom {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 12px;
+    }
+
+    select {
+      background: var(--panel2);
+      color: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      max-width: 55%;
+    }
+
+    .primary-btn {
+      border: 0;
+      border-radius: 11px;
+      background: linear-gradient(110deg, var(--purple), var(--pink));
+      color: white;
+      font-weight: 800;
+      padding: 11px 17px;
+    }
+
+    .primary-btn:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .post-head {
+      display: flex;
+      gap: 11px;
+      align-items: center;
+      padding: 15px 15px 10px;
+    }
+
+    .post-author { min-width: 0; flex: 1; }
+
+    .post-author strong {
+      display: block;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .post-meta {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .game-tag {
+      display: inline-block;
+      margin-top: 7px;
+      color: #d9b7ff;
+      background: #26193a;
+      padding: 5px 9px;
+      border-radius: 7px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .post-content {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      line-height: 1.65;
+      padding: 4px 16px 16px;
+      font-size: 15px;
+    }
+
+    .post-actions {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 10px 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .action-btn {
+      color: #c3c3d4;
+      background: transparent;
+      border: 0;
+      border-radius: 10px;
+      padding: 9px 10px;
+      font-size: 13px;
+    }
+
+    .action-btn:hover { background: var(--panel2); }
+    .action-btn.liked { color: #ff65a3; }
+    .delete-btn { margin-left: auto; }
+
+    .comments {
+      padding: 13px;
+      border-top: 1px solid var(--border);
+      background: #0e0e17;
+    }
+
+    .comment {
+      display: flex;
+      gap: 9px;
+      margin-bottom: 12px;
+    }
+
+    .comment .avatar {
+      width: 30px;
+      height: 30px;
+      font-size: 11px;
+    }
+
+    .comment-bubble {
+      background: var(--panel2);
+      padding: 9px 11px;
+      border-radius: 12px;
+      flex: 1;
+      overflow-wrap: anywhere;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .comment-bubble strong {
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .comment-form {
+      display: flex;
+      gap: 8px;
+      margin-top: 13px;
+    }
+
+    .comment-input {
+      flex: 1;
+      min-width: 0;
+      background: #171722;
+      color: white;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 10px;
+      outline: none;
+    }
+
+    .small-btn {
+      border: 0;
+      background: var(--purple);
+      color: white;
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-weight: 750;
+    }
+
+    .empty-card {
+      padding: 26px 18px;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .empty-card strong { color: white; }
+
+    .right-card h3 { margin-top: 0; }
+    .game-pill {
+      display: inline-block;
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      border-radius: 10px;
+      margin: 4px 3px 0 0;
+      font-size: 12px;
+    }
+
+    #status {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 8px 0 15px;
+      line-height: 1.5;
+    }
+
+    .mobile-nav {
+      display: none;
+    }
+
+    @media (max-width: 950px) {
+      .layout {
+        grid-template-columns: 175px minmax(0, 650px);
+      }
+      .rightbar { display: none; }
+    }
+
+    @media (max-width: 650px) {
+      .topbar { padding: 0 13px; }
+      .layout {
+        display: block;
+        padding: 12px 10px 90px;
+      }
+      .sidebar { display: none; }
+      .feed-tabs { margin-bottom: 13px; }
+      .composer { padding: 12px; }
+      .post, .composer { border-radius: 15px; }
+      .post-actions { justify-content: space-around; }
+      .action-btn { padding: 9px 6px; }
+      .mobile-nav {
+        display: flex;
+        position: fixed;
+        z-index: 30;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        justify-content: space-around;
+        background: rgba(12, 12, 20, .97);
+        border-top: 1px solid var(--border);
+        padding: 9px 3px calc(9px + env(safe-area-inset-bottom));
+        backdrop-filter: blur(18px);
+      }
+      .mobile-nav a, .mobile-nav button {
+        background: none;
+        border: 0;
+        color: #b7b7ca;
+        font-size: 11px;
+        text-align: center;
+        min-width: 45px;
+      }
+      .mobile-nav .nav-icon {
+        display: block;
+        font-size: 21px;
+        margin-bottom: 3px;
+      }
+      .mobile-nav .selected { color: #ed4bff; }
+    }
+  </style>
 </head>
+
 <body>
-<header class="top">
-<div class="logo">ZYVIX</div>
-<div class="feed-tabs">
-<button data-feed="following">Following</button>
-<button class="active" data-feed="foryou">For You</button>
-</div>
-<button class="search" aria-label="Search" id="searchBtn">⌕</button>
-</header>
+  <header class="topbar">
+    <a class="logo" href="for-you.html">ZYV<span>IX</span></a>
+    <div class="top-actions">
+      <span id="account-label" style="font-size:12px;color:#aaa">Loading account…</span>
+      <a class="icon-btn" href="profile.html" aria-label="Profile">👤</a>
+    </div>
+  </header>
 
-<div class="toast" id="toast" role="status"></div>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="side-link active" href="for-you.html"><span class="side-icon">🏠</span> For You</a>
+      <a class="side-link" href="#discover"><span class="side-icon">🔎</span> Discover</a>
+      <a class="side-link" href="#create-post"><span class="side-icon">➕</span> Create Post</a>
+      <a class="side-link" href="#inbox"><span class="side-icon">💬</span> Inbox</a>
+      <a class="side-link" href="profile.html"><span class="side-icon">👤</span> Profile</a>
 
-<main class="feed" id="feed" aria-label="For You gaming feed">
+      <div class="side-note">
+        <strong>🎮 Your gaming world</strong>
+        <p>Share your clips, discuss games and connect with other players on ZYVIX.</p>
+      </div>
+    </aside>
 
-<article class="post" data-game="Free Fire">
-<div class="art fire"><div class="game-art"><div class="game-icon">🔥</div><div class="game-title">FREE FIRE</div><div class="game-sub">BOOYAH • CLIP</div></div></div>
-<div class="shade"></div>
-<div class="side">
-<div class="creator">F</div>
-<button class="action like"><span class="ico">♥</span><small class="count">1.2K</small></button>
-<button class="action comment"><span class="ico">●</span><small>Comment</small></button>
-<button class="action share"><span class="ico">↗</span><small>Share</small></button>
-<button class="action save"><span class="ico">★</span><small>Save</small></button>
-</div>
-<div class="details">
-<div class="tag">🎮 FREE FIRE · HIGHLIGHT</div>
-<div class="username">@zyvix_gamer</div>
-<p class="caption">That last-second clutch 😮‍💨🔥 Who's your squad's best rusher? #FreeFire #ZYVIX</p>
-<div class="music">♫ <span>Original sound · ZYVIX gaming clips</span></div>
-</div>
-</article>
+    <main>
+      <div class="feed-tabs">
+        <button class="feed-tab active" id="for-you-tab">For You</button>
+        <button class="feed-tab" id="following-tab">Following</button>
+      </div>
 
-<article class="post" data-game="Fortnite">
-<div class="art fortnite"><div class="game-art"><div class="game-icon">⚡</div><div class="game-title">FORTNITE</div><div class="game-sub">BUILD • EDIT • WIN</div></div></div>
-<div class="shade"></div>
-<div class="side">
-<div class="creator">N</div>
-<button class="action like"><span class="ico">♥</span><small class="count">846</small></button>
-<button class="action comment"><span class="ico">●</span><small>Comment</small></button>
-<button class="action share"><span class="ico">↗</span><small>Share</small></button>
-<button class="action save"><span class="ico">★</span><small>Save</small></button>
-</div>
-<div class="details">
-<div class="tag">🎮 FORTNITE · GAMEPLAY</div>
-<div class="username">@buildmode</div>
-<p class="caption">Clean edits take practice. Drop your best Fortnite tip below 👇 #Fortnite #MobileGaming</p>
-<div class="music">♫ <span>Gaming beat · Creator audio</span></div>
-</div>
-</article>
+      <div id="status">Connecting to ZYVIX…</div>
 
-<article class="post" data-game="Roblox">
-<div class="art roblox"><div class="game-art"><div class="game-icon">🧱</div><div class="game-title">ROBLOX</div><div class="game-sub">PLAY • CREATE • SHARE</div></div></div>
-<div class="shade"></div>
-<div class="side">
-<div class="creator">R</div>
-<button class="action like"><span class="ico">♥</span><small class="count">2.4K</small></button>
-<button class="action comment"><span class="ico">●</span><small>Comment</small></button>
-<button class="action share"><span class="ico">↗</span><small>Share</small></button>
-<button class="action save"><span class="ico">★</span><small>Save</small></button>
-</div>
-<div class="details">
-<div class="tag">🎮 ROBLOX · COMMUNITY</div>
-<div class="username">@roblox_world</div>
-<p class="caption">What game should we try next? Tell the ZYVIX community 🎮 #Roblox #GamingCommunity</p>
-<div class="music">♫ <span>Original sound · ZYVIX community</span></div>
-</div>
-</article>
+      <section class="composer" id="create-post">
+        <div class="composer-top">
+          <div class="avatar" id="my-avatar">Z</div>
+          <div>
+            <strong id="composer-name">Your gaming account</strong>
+            <div class="post-meta">Share something with the community</div>
+          </div>
+        </div>
 
-</main>
+        <textarea id="post-content" maxlength="2000"
+          placeholder="What's happening in your gaming world? 🎮"></textarea>
 
-<nav class="bottom" aria-label="Main navigation">
-<a class="navitem active" href="./for-you.html"><b>⌂</b><span>Home</span></a>
-<a class="navitem" href="./discover.html" data-coming="Discover"><b>⌕</b><span>Discover</span></a>
-<a class="navitem" href="./create.html" data-coming="Create"><b class="create">＋</b><span>Create</span></a>
-<a class="navitem" href="./inbox.html" data-coming="Inbox"><b>✉</b><span>Inbox</span></a>
-<a class="navitem" href="./profile.html"><b>◉</b><span>Profile</span></a>
-</nav>
+        <div class="composer-bottom">
+          <select id="post-game" aria-label="Choose game">
+            <option value="General">🎮 General</option>
+            <option value="Free Fire">🔥 Free Fire</option>
+            <option value="Fortnite">🎯 Fortnite</option>
+            <option value="Roblox">🧱 Roblox</option>
+            <option value="Call of Duty Mobile">💥 Call of Duty Mobile</option>
+            <option value="Blood Strike">⚡ Blood Strike</option>
+            <option value="Minecraft">⛏️ Minecraft</option>
+            <option value="Other">🎮 Other game</option>
+          </select>
+          <button class="primary-btn" id="publish-btn">Post ↗</button>
+        </div>
+      </section>
 
-<section class="comment-panel" id="commentPanel">
-<h3>Comments</h3>
-<p>Comments will appear here when ZYVIX comments are connected to Supabase.</p>
-<button id="closeComments">Close</button>
-</section>
+      <section id="feed"></section>
+    </main>
 
-<script>
-const toast=document.getElementById('toast');
-let toastTimer;
+    <aside class="rightbar">
+      <div class="right-card" id="discover">
+        <h3>🔥 Popular games</h3>
+        <span class="game-pill">Free Fire</span>
+        <span class="game-pill">Fortnite</span>
+        <span class="game-pill">Roblox</span>
+        <span class="game-pill">COD Mobile</span>
+        <span class="game-pill">Blood Strike</span>
+      </div>
+      <div class="right-card" id="inbox">
+        <h3>💜 Welcome to ZYVIX</h3>
+        <p>Meet gamers, share your ideas and join the community.</p>
+        <p>Chat and following features can be connected when their database tables are ready.</p>
+      </div>
+    </aside>
+  </div>
 
-function showToast(msg){
-toast.textContent=msg;
-toast.classList.add('show');
-clearTimeout(toastTimer);
-toastTimer=setTimeout(()=>toast.classList.remove('show'),2200);
-}
+  <nav class="mobile-nav">
+    <a class="selected" href="for-you.html"><span class="nav-icon">🏠</span>Home</a>
+    <a href="#discover"><span class="nav-icon">🔎</span>Discover</a>
+    <button id="mobile-create"><span class="nav-icon">➕</span>Create</button>
+    <a href="#inbox"><span class="nav-icon">💬</span>Inbox</a>
+    <a href="profile.html"><span class="nav-icon">👤</span>Profile</a>
+  </nav>
 
-document.querySelectorAll('.like').forEach(btn=>{
-btn.addEventListener('click',()=>{
-btn.classList.toggle('liked');
-showToast(btn.classList.contains('liked')?'Liked! Demo interaction only':'Like removed');
-});
-});
+  <script>
+    // IMPORTANT:
+    // Use the exact same Supabase URL and publishable key as index.html.
+    // Never put a service-role secret key in public website code.
+    const SUPABASE_URL = "https://ncrlagqvaxwncuuwidzc.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_rrFCTlSFqEKwJgTLL-qIPw_5VyE7sTH";
 
-document.querySelectorAll('.save').forEach(btn=>{
-btn.addEventListener('click',()=>{
-btn.classList.toggle('saved');
-showToast(btn.classList.contains('saved')?'Saved on this device preview':'Removed from saved preview');
-});
-});
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-document.querySelectorAll('.comment').forEach(btn=>{
-btn.addEventListener('click',()=>{
-document.getElementById('commentPanel').classList.add('show');
-});
-});
+    let currentUser = null;
+    let profileMap = {};
+    let activeTab = "for-you";
+    let postsCache = [];
 
-document.getElementById('closeComments').addEventListener('click',()=>{
-document.getElementById('commentPanel').classList.remove('show');
-});
+    const feed = document.getElementById("feed");
+    const statusBox = document.getElementById("status");
+    const publishBtn = document.getElementById("publish-btn");
 
-document.querySelectorAll('.share').forEach(btn=>{
-btn.addEventListener('click',async()=>{
-try{
-if(navigator.share){
-await navigator.share({title:'ZYVIX Gaming Feed',text:'Check out this gaming post on ZYVIX',url:location.href});
-}else if(navigator.clipboard){
-await navigator.clipboard.writeText(location.href);
-showToast('Page link copied');
-}else{
-showToast('Share is not available in this browser');
-}
-}catch(e){
-if(e.name!=='AbortError')showToast('Could not share right now');
-}
-});
-});
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[character]);
+    }
 
-document.querySelectorAll('[data-feed]').forEach(btn=>{
-btn.addEventListener('click',()=>{
-document.querySelectorAll('[data-feed]').forEach(x=>x.classList.toggle('active',x===btn));
-showToast(btn.dataset.feed==='following'?'Following feed will show accounts you follow once connected.':'You are viewing the For You preview');
-});
-});
+    function displayName(userId) {
+      const profile = profileMap[userId];
+      if (profile && profile.username) return profile.username;
+      if (currentUser && currentUser.id === userId) {
+        return currentUser.user_metadata?.username ||
+          currentUser.email?.split("@")[0] || "You";
+      }
+      return "ZYVIX Gamer";
+    }
 
-document.getElementById('searchBtn').addEventListener('click',()=>{
-showToast('Search is coming soon');
-});
+    function initials(name) {
+      return (name || "Z").trim().slice(0, 1).toUpperCase();
+    }
 
-document.querySelectorAll('[data-coming]').forEach(a=>{
-a.addEventListener('click',e=>{
-e.preventDefault();
-showToast(a.dataset.coming+' is coming soon');
-});
-});
-</script>
+    function avatarHTML(userId, extraClass = "") {
+      const profile = profileMap[userId] || {};
+      const name = displayName(userId);
+      if (profile.avatar_url) {
+        return `<div class="avatar ${extraClass}">
+          <img src="${escapeHTML(profile.avatar_url)}" alt=""
+          onerror="this.parentElement.textContent='${escapeHTML(initials(name))}'">
+        </div>`;
+      }
+      return `<div class="avatar ${extraClass}">${escapeHTML(initials(name))}</div>`;
+    }
+
+    function timeAgo(value) {
+      const seconds = Math.max(0, Math.floor((Date.now() - new Date(value).getTime()) / 1000));
+      if (seconds < 60) return "Just now";
+      if (seconds < 3600) return Math.floor(seconds / 60) + "m ago";
+      if (seconds < 86400) return Math.floor(seconds / 3600) + "h ago";
+      if (seconds < 604800) return Math.floor(seconds / 86400) + "d ago";
+      return new Date(value).toLocaleDateString();
+    }
+
+    async function loadProfiles(userIds) {
+      const ids = [...new Set(userIds)].filter(Boolean);
+      if (!ids.length) return;
+
+      const { data, error } = await db
+        .from("profiles")
+        .select("id, username, avatar_url")
+        .in("id", ids);
+
+      if (!error && data) {
+        data.forEach(profile => profileMap[profile.id] = profile);
+      }
+    }
+
+    async function loadFeed() {
+      statusBox.textContent = "Loading posts…";
+      feed.innerHTML = "";
+
+      const { data: posts, error } = await db
+        .from("posts")
+        .select("id, user_id, content, game, created_at")
+        .order("created_at", { ascending: false })
+        .limit(50);
+
+      if (error) {
+        statusBox.textContent = "Couldn't load posts. Check your Supabase URL, key, database tables and policies.";
+        feed.innerHTML = `<div class="empty-card">
+          <strong>Unable to load the feed.</strong><br>
+          ${escapeHTML(error.message)}
+        </div>`;
+        return;
+      }
+
+      postsCache = posts || [];
+
+      if (postsCache.length === 0) {
+        statusBox.textContent = "Your feed is ready.";
+        feed.innerHTML = `<div class="empty-card">
+          <strong>Welcome to ZYVIX! 🎮</strong><br>
+          There are no posts yet. Create the first gaming post above.
+        </div>`;
+        return;
+      }
+
+      await loadProfiles(postsCache.map(post => post.user_id));
+
+      const postIds = postsCache.map(post => post.id);
+      const userIds = postsCache.map(post => post.user_id);
+
+      const [likesResult, commentsResult] = await Promise.all([
+        db.from("likes").select("post_id, user_id").in("post_id", postIds),
+        db.from("comments").select("id, post_id").in("post_id", postIds)
+      ]);
+
+      if (likesResult.error || commentsResult.error) {
+        statusBox.textContent = "Posts loaded, but likes or comments could not be loaded. Check the database policies.";
+      } else {
+        statusBox.textContent = `${postsCache.length} recent post${postsCache.length === 1 ? "" : "s"}`;
+      }
+
+      const likes = likesResult.data || [];
+      const comments = commentsResult.data || [];
+
+      feed.innerHTML = postsCache.map(post => {
+        const name = displayName(post.user_id);
+        const postLikes = likes.filter(item => item.post_id === post.id);
+        const commentCount = comments.filter(item => item.post_id === post.id).length;
+        const liked = currentUser && postLikes.some(item => item.user_id === currentUser.id);
+        const ownPost = currentUser && post.user_id === currentUser.id;
+
+        return `
+          <article class="post" data-post-id="${escapeHTML(post.id)}">
+            <div class="post-head">
+              ${avatarHTML(post.user_id)}
+              <div class="post-author">
+                <strong>${escapeHTML(name)}</strong>
+                <div class="post-meta">${escapeHTML(timeAgo(post.created_at))}</div>
+                <span class="game-tag">🎮 ${escapeHTML(post.game || "General")}</span>
+              </div>
+            </div>
+
+            <div class="post-content">${escapeHTML(post.content)}</div>
+
+            <div class="post-actions">
+              <button class="action-btn like-btn ${liked ? "liked" : ""}"
+                data-id="${escapeHTML(post.id)}">
+                ${liked ? "❤️" : "🤍"} ${postLikes.length}
+              </button>
+              <button class="action-btn comments-btn" data-id="${escapeHTML(post.id)}">
+                💬 ${commentCount}
+              </button>
+              <button class="action-btn share-btn" data-id="${escapeHTML(post.id)}">
+                ↗ Share
+              </button>
+              ${ownPost ? `<button class="action-btn delete-btn" data-id="${escapeHTML(post.id)}">🗑️</button>` : ""}
+            </div>
+
+            <div class="comments" id="comments-${escapeHTML(post.id)}" hidden>
+              <div class="comment-list">Loading comments…</div>
+              <form class="comment-form" data-id="${escapeHTML(post.id)}">
+                <input class="comment-input" maxlength="1000"
+                  placeholder="${currentUser ? "Write a comment…" : "Log in to comment"}"
+                  ${currentUser ? "" : "disabled"} required>
+                <button class="small-btn" ${currentUser ? "" : "disabled"}>Send</button>
+              </form>
+            </div>
+          </article>`;
+      }).join("");
+
+      attachPostActions();
+    }
+
+    function attachPostActions() {
+      document.querySelectorAll(".like-btn").forEach(button => {
+        button.addEventListener("click", () => toggleLike(button.dataset.id));
+      });
+
+      document.querySelectorAll(".comments-btn").forEach(button => {
+        button.addEventListener("click", async () => {
+          const panel = document.getElementById("comments-" + button.dataset.id);
+          panel.hidden = !panel.hidden;
+          if (!panel.hidden) await loadComments(button.dataset.id, panel);
+        });
+      });
+
+      document.querySelectorAll(".comment-form").forEach(form => {
+        form.addEventListener("submit", async event => {
+          event.preventDefault();
+          await submitComment(form.dataset.id, form);
+        });
+      });
+
+      document.querySelectorAll(".share-btn").forEach(button => {
+        button.addEventListener("click", async () => {
+          const post = postsCache.find(item => item.id === button.dataset.id);
+          if (!post) return;
+          const shareText = `${post.content}\n\nShared from ZYVIX`;
+          try {
+            if (navigator.share) {
+              await navigator.share({ title: "ZYVIX post", text: shareText, url: location.href });
+            } else if (navigator.clipboard) {
+              await navigator.clipboard.writeText(shareText + "\n" + location.href);
+              alert("Post copied!");
+            } else {
+              prompt("Copy this post:", shareText + "\n" + location.href);
+            }
+          } catch (error) {
+            if (error.name !== "AbortError") alert("Couldn't share this post.");
+          }
+        });
+      });
+
+      document.querySelectorAll(".delete-btn").forEach(button => {
+        button.addEventListener("click", async () => {
+          if (!currentUser) return;
+          if (!confirm("Delete this post?")) return;
+          const { error } = await db.from("posts")
+            .delete()
+            .eq("id", button.dataset.id)
+            .eq("user_id", currentUser.id);
+          if (error) alert("Couldn't delete post: " + error.message);
+          else await loadFeed();
+        });
+      });
+    }
+
+    async function toggleLike(postId) {
+      if (!currentUser) {
+        alert("Please log in on the ZYVIX homepage first.");
+        return;
+      }
+
+      const { data: existing, error: findError } = await db
+        .from("likes")
+        .select("post_id")
+        .eq("post_id", postId)
+        .eq("user_id", currentUser.id)
+        .maybeSingle();
+
+      if (findError) {
+        alert("Couldn't check the like: " + findError.message);
+        return;
+      }
+
+      let result;
+      if (existing) {
+        result = await db.from("likes")
+          .delete()
+          .eq("post_id", postId)
+          .eq("user_id", currentUser.id);
+      } else {
+        result = await db.from("likes").insert({
+          post_id: postId,
+          user_id: currentUser.id
+        });
+      }
+
+      if (result.error) {
+        alert("Couldn't update like: " + result.error.message);
+      } else {
+        await loadFeed();
+      }
+    }
+
+    async function loadComments(postId, panel) {
+      const list = panel.querySelector(".comment-list");
+      list.textContent = "Loading comments…";
+
+      const { data: comments, error } = await db
+        .from("comments")
+        .select("id, user_id, content, created_at")
+        .eq("post_id", postId)
+        .order("created_at", { ascending: true });
+
+      if (error) {
+        list.textContent = "Couldn't load comments: " + error.message;
+        return;
+      }
+
+      await loadProfiles((comments || []).map(comment => comment.user_id));
+
+      if (!comments || comments.length === 0) {
+        list.innerHTML = `<div class="post-meta">No comments yet. Start the conversation!</div>`;
+        return;
+      }
+
+      list.innerHTML = comments.map(comment => `
+        <div class="comment">
+          ${avatarHTML(comment.user_id)}
+          <div class="comment-bubble">
+            <strong>${escapeHTML(displayName(comment.user_id))}</strong>
+            ${escapeHTML(comment.content)}
+            <div class="post-meta">${escapeHTML(timeAgo(comment.created_at))}</div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    async function submitComment(postId, form) {
+      if (!currentUser) {
+        alert("Please log in first.");
+        return;
+      }
+
+      const input = form.querySelector("input");
+      const content = input.value.trim();
+      if (!content) return;
+
+      const button = form.querySelector("button");
+      button.disabled = true;
+
+      const { error } = await db.from("comments").insert({
+        post_id: postId,
+        user_id: currentUser.id,
+        content
+      });
+
+      button.disabled = false;
+
+      if (error) {
+        alert("Couldn't send comment: " + error.message);
+        return;
+      }
+
+      input.value = "";
+      const panel = document.getElementById("comments-" + postId);
+      await loadComments(postId, panel);
+      await loadFeed();
+      panel.hidden = false;
+    }
+
+    publishBtn.addEventListener("click", async () => {
+      if (!currentUser) {
+        alert("Please log in on the ZYVIX homepage first.");
+        location.href = "index.html";
+        return;
+      }
+
+      const input = document.getElementById("post-content");
+      const content = input.value.trim();
+      const game = document.getElementById("post-game").value;
+
+      if (!content) {
+        alert("Write something before posting.");
+        input.focus();
+        return;
+      }
+
+      publishBtn.disabled = true;
+      publishBtn.textContent = "Posting…";
+
+      const { error } = await db.from("posts").insert({
+        user_id: currentUser.id,
+        content,
+        game
+      });
+
+      publishBtn.disabled = false;
+      publishBtn.textContent = "Post ↗";
+
+      if (error) {
+        alert("Couldn't create post: " + error.message);
+        return;
+      }
+
+      input.value = "";
+      await loadFeed();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    document.getElementById("for-you-tab").addEventListener("click", () => {
+      activeTab = "for-you";
+      document.getElementById("for-you-tab").classList.add("active");
+      document.getElementById("following-tab").classList.remove("active");
+      loadFeed();
+    });
+
+    document.getElementById("following-tab").addEventListener("click", () => {
+      activeTab = "following";
+      document.getElementById("following-tab").classList.add("active");
+      document.getElementById("for-you-tab").classList.remove("active");
+      statusBox.textContent = "";
+      feed.innerHTML = `<div class="empty-card">
+        <strong>👥 Following feed</strong><br>
+        The following system has not been connected yet. For now, use For You to see community posts.
+      </div>`;
+    });
+
+    document.getElementById("mobile-create").addEventListener("click", () => {
+      document.getElementById("post-content").focus();
+      document.getElementById("create-post").scrollIntoView({ behavior: "smooth" });
+    });
+
+    async function startApp() {
+      try {
+        const { data, error } = await db.auth.getSession();
+        if (error) throw error;
+
+        currentUser = data.session?.user || null;
+
+        if (currentUser) {
+          const name = currentUser.user_metadata?.username ||
+            currentUser.email?.split("@")[0] || "Gamer";
+
+          document.getElementById("account-label").textContent = name;
+          document.getElementById("composer-name").textContent = name;
+          document.getElementById("my-avatar").textContent = initials(name);
+        } else {
+          document.getElementById("account-label").textContent = "Guest";
+          document.getElementById("composer-name").textContent = "Log in to post";
+          statusBox.innerHTML = `You're viewing as a guest. <a style="color:#ed4bff" href="index.html">Log in</a> to create posts, like and comment.`;
+        }
+
+        await loadFeed();
+      } catch (error) {
+        statusBox.textContent = "Couldn't connect: " + error.message;
+      }
+    }
+
+    db.auth.onAuthStateChange((_event, session) => {
+      currentUser = session?.user || null;
+      if (document.readyState === "complete") loadFeed();
+    });
+
+    startApp();
+  </script>
 </body>
 </html>
