@@ -1,23 +1,24 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ZYVIX — For You</title>
   <meta name="theme-color" content="#09090f">
+  <title>ZYVIX — Gaming Community</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     :root {
       --bg: #09090f;
-      --panel: #12121d;
-      --panel2: #191927;
-      --text: #f5f5ff;
-      --muted: #9292a8;
-      --purple: #8b5cf6;
-      --pink: #ed4bff;
-      --border: #29293a;
+      --panel: #11111b;
+      --panel2: #181824;
+      --purple: #a855f7;
+      --pink: #ec4899;
+      --text: #f5f3ff;
+      --muted: #9995ae;
+      --border: #292638;
     }
 
     * { box-sizing: border-box; }
@@ -27,923 +28,725 @@
       background: var(--bg);
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      min-height: 100vh;
     }
 
-    button, textarea, select { font: inherit; }
+    button, input, textarea, select { font: inherit; }
     button { cursor: pointer; }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
     .topbar {
-      height: 62px;
       position: sticky;
       top: 0;
-      z-index: 20;
+      z-index: 10;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 18px;
-      background: rgba(9, 9, 15, .94);
-      backdrop-filter: blur(18px);
+      padding: 15px 18px;
+      background: rgba(9,9,15,.94);
       border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(15px);
     }
 
     .logo {
       font-size: 25px;
       font-weight: 900;
-      letter-spacing: -1.3px;
+      letter-spacing: 1px;
+      background: linear-gradient(100deg, #c084fc, #ec4899);
+      -webkit-background-clip: text;
+      color: transparent;
     }
 
-    .logo span {
-      color: var(--pink);
-    }
+    .tagline { color: var(--muted); font-size: 11px; }
 
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .icon-btn {
-      background: var(--panel2);
-      color: white;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      padding: 9px 12px;
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 210px minmax(0, 650px) 240px;
-      gap: 22px;
-      justify-content: center;
-      max-width: 1180px;
-      padding: 22px 16px 100px;
+    .page {
+      width: 100%;
+      max-width: 720px;
       margin: auto;
+      padding: 18px 14px 100px;
     }
 
-    .sidebar, .rightbar {
-      position: sticky;
-      top: 82px;
-      align-self: start;
-    }
-
-    .side-link {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 13px 12px;
-      margin-bottom: 5px;
-      border-radius: 13px;
-      color: #c7c7d8;
-      font-weight: 650;
-    }
-
-    .side-link:hover, .side-link.active {
-      background: #20182f;
-      color: white;
-    }
-
-    .side-icon { font-size: 21px; }
-
-    .side-note, .right-card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 17px;
-      padding: 16px;
-      margin-top: 20px;
-    }
-
-    .side-note p, .right-card p {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .feed-tabs {
-      display: flex;
-      justify-content: center;
-      gap: 28px;
-      border-bottom: 1px solid var(--border);
+    .welcome {
+      padding: 22px;
+      border: 1px solid #48316a;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #211135, #11111b 70%);
       margin-bottom: 18px;
     }
 
-    .feed-tab {
-      padding: 13px 3px;
-      background: none;
+    .welcome h1 { margin: 0 0 8px; font-size: 25px; }
+    .welcome p { margin: 0; color: #c6b7dd; line-height: 1.5; }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .tab {
+      flex: 1;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 8px;
+      background: var(--panel);
       color: var(--muted);
-      border: 0;
-      border-bottom: 2px solid transparent;
-      font-weight: 750;
+      font-weight: 700;
     }
 
-    .feed-tab.active {
+    .tab.active {
+      background: #29183e;
+      border-color: var(--purple);
       color: white;
-      border-bottom-color: var(--pink);
     }
 
-    .composer, .post, .empty-card {
+    .composer, .post, .empty {
       background: var(--panel);
       border: 1px solid var(--border);
       border-radius: 18px;
-      margin-bottom: 17px;
-      overflow: hidden;
+      margin-bottom: 16px;
     }
 
     .composer { padding: 16px; }
 
-    .composer-top {
+    .section-title {
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    textarea, input, select {
+      width: 100%;
+      padding: 13px;
+      color: var(--text);
+      background: #0b0b13;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      outline: none;
+    }
+
+    textarea { resize: vertical; min-height: 90px; }
+    textarea:focus, input:focus, select:focus { border-color: var(--purple); }
+
+    .field { margin-top: 10px; }
+
+    .primary {
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 17px;
+      color: white;
+      font-weight: 800;
+      background: linear-gradient(100deg, #9333ea, #db2777);
+    }
+
+    .primary:disabled { opacity: .55; cursor: wait; }
+
+    .composer-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .muted { color: var(--muted); font-size: 12px; }
+
+    .post { padding: 16px; }
+
+    .post-head {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 11px;
+      margin-bottom: 13px;
     }
 
     .avatar {
       width: 43px;
       height: 43px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--purple), var(--pink));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
+      display: grid;
+      place-items: center;
       flex-shrink: 0;
+      font-weight: 900;
+      background: linear-gradient(135deg, #9333ea, #ec4899);
       overflow: hidden;
     }
 
-    .avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-    .composer textarea {
-      width: 100%;
-      min-height: 70px;
-      resize: vertical;
-      margin-top: 13px;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      background: #0c0c15;
-      color: white;
-      padding: 13px;
-      outline: none;
-    }
-
-    .composer textarea:focus, .comment-input:focus {
-      border-color: var(--purple);
-    }
-
-    .composer-bottom {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 12px;
-    }
-
-    select {
-      background: var(--panel2);
-      color: white;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px;
-      max-width: 55%;
-    }
-
-    .primary-btn {
-      border: 0;
-      border-radius: 11px;
-      background: linear-gradient(110deg, var(--purple), var(--pink));
-      color: white;
-      font-weight: 800;
-      padding: 11px 17px;
-    }
-
-    .primary-btn:disabled {
-      opacity: .5;
-      cursor: not-allowed;
-    }
-
-    .post-head {
-      display: flex;
-      gap: 11px;
-      align-items: center;
-      padding: 15px 15px 10px;
-    }
-
-    .post-author { min-width: 0; flex: 1; }
-
-    .post-author strong {
-      display: block;
-      font-size: 14px;
-      overflow-wrap: anywhere;
-    }
-
-    .post-meta {
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 4px;
-    }
-
+    .author { font-weight: 800; font-size: 14px; }
+    .meta { margin-top: 4px; color: var(--muted); font-size: 11px; }
     .game-tag {
-      display: inline-block;
-      margin-top: 7px;
-      color: #d9b7ff;
-      background: #26193a;
-      padding: 5px 9px;
-      border-radius: 7px;
+      margin-left: auto;
+      padding: 6px 9px;
+      border-radius: 9px;
+      background: #26163a;
+      color: #d8b4fe;
       font-size: 11px;
-      font-weight: 800;
+      font-weight: 700;
     }
 
     .post-content {
+      font-size: 14px;
+      line-height: 1.7;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
-      line-height: 1.65;
-      padding: 4px 16px 16px;
-      font-size: 15px;
     }
 
     .post-actions {
       display: flex;
-      align-items: center;
-      gap: 7px;
-      padding: 10px 12px;
-      border-top: 1px solid var(--border);
-    }
-
-    .action-btn {
-      color: #c3c3d4;
-      background: transparent;
-      border: 0;
-      border-radius: 10px;
-      padding: 9px 10px;
-      font-size: 13px;
-    }
-
-    .action-btn:hover { background: var(--panel2); }
-    .action-btn.liked { color: #ff65a3; }
-    .delete-btn { margin-left: auto; }
-
-    .comments {
-      padding: 13px;
-      border-top: 1px solid var(--border);
-      background: #0e0e17;
-    }
-
-    .comment {
-      display: flex;
-      gap: 9px;
-      margin-bottom: 12px;
-    }
-
-    .comment .avatar {
-      width: 30px;
-      height: 30px;
-      font-size: 11px;
-    }
-
-    .comment-bubble {
-      background: var(--panel2);
-      padding: 9px 11px;
-      border-radius: 12px;
-      flex: 1;
-      overflow-wrap: anywhere;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .comment-bubble strong {
-      display: block;
-      margin-bottom: 3px;
-    }
-
-    .comment-form {
-      display: flex;
       gap: 8px;
-      margin-top: 13px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
     }
 
-    .comment-input {
+    .action {
       flex: 1;
-      min-width: 0;
-      background: #171722;
-      color: white;
-      border: 1px solid var(--border);
-      border-radius: 11px;
-      padding: 10px;
-      outline: none;
-    }
-
-    .small-btn {
-      border: 0;
-      background: var(--purple);
-      color: white;
+      padding: 10px 5px;
+      border: 1px solid transparent;
       border-radius: 10px;
-      padding: 9px 12px;
-      font-weight: 750;
-    }
-
-    .empty-card {
-      padding: 26px 18px;
-      text-align: center;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .empty-card strong { color: white; }
-
-    .right-card h3 { margin-top: 0; }
-    .game-pill {
-      display: inline-block;
+      color: #c7c2d8;
       background: var(--panel2);
-      border: 1px solid var(--border);
-      padding: 8px 10px;
-      border-radius: 10px;
-      margin: 4px 3px 0 0;
       font-size: 12px;
     }
 
-    #status {
-      color: var(--muted);
+    .action.liked {
+      color: #f0abfc;
+      border-color: #7536a8;
+      background: #29183e;
+    }
+
+    .comments {
+      margin-top: 13px;
+      padding-top: 13px;
+      border-top: 1px solid var(--border);
+    }
+
+    .comment {
+      padding: 10px;
+      margin-bottom: 8px;
+      background: #191923;
+      border-radius: 10px;
       font-size: 13px;
-      margin: 8px 0 15px;
-      line-height: 1.5;
+      overflow-wrap: anywhere;
     }
 
-    .mobile-nav {
+    .comment strong { color: #d8b4fe; }
+    .comment-form { display: flex; gap: 8px; margin-top: 10px; }
+    .comment-form input { min-width: 0; }
+    .comment-form button { white-space: nowrap; }
+
+    .empty { padding: 28px 18px; text-align: center; color: var(--muted); }
+    .empty h3 { color: white; margin-top: 0; }
+
+    .notice {
       display: none;
+      margin-bottom: 15px;
+      padding: 12px;
+      border-radius: 12px;
+      background: #241b35;
+      color: #e9d5ff;
+      font-size: 13px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
     }
 
-    @media (max-width: 950px) {
-      .layout {
-        grid-template-columns: 175px minmax(0, 650px);
-      }
-      .rightbar { display: none; }
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 4px calc(10px + env(safe-area-inset-bottom));
+      background: rgba(15,15,24,.97);
+      border-top: 1px solid var(--border);
+      backdrop-filter: blur(16px);
     }
 
-    @media (max-width: 650px) {
-      .topbar { padding: 0 13px; }
-      .layout {
-        display: block;
-        padding: 12px 10px 90px;
-      }
-      .sidebar { display: none; }
-      .feed-tabs { margin-bottom: 13px; }
-      .composer { padding: 12px; }
-      .post, .composer { border-radius: 15px; }
-      .post-actions { justify-content: space-around; }
-      .action-btn { padding: 9px 6px; }
-      .mobile-nav {
-        display: flex;
-        position: fixed;
-        z-index: 30;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        justify-content: space-around;
-        background: rgba(12, 12, 20, .97);
-        border-top: 1px solid var(--border);
-        padding: 9px 3px calc(9px + env(safe-area-inset-bottom));
-        backdrop-filter: blur(18px);
-      }
-      .mobile-nav a, .mobile-nav button {
-        background: none;
-        border: 0;
-        color: #b7b7ca;
-        font-size: 11px;
-        text-align: center;
-        min-width: 45px;
-      }
-      .mobile-nav .nav-icon {
-        display: block;
-        font-size: 21px;
-        margin-bottom: 3px;
-      }
-      .mobile-nav .selected { color: #ed4bff; }
+    .nav-item {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 11px;
+      text-align: center;
+      min-width: 55px;
+    }
+
+    .nav-item span { display: block; font-size: 20px; margin-bottom: 4px; }
+    .nav-item.active { color: #d8b4fe; }
+
+    .refresh {
+      color: #d8b4fe;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--panel);
+      padding: 8px 11px;
+    }
+
+    @media (min-width: 650px) {
+      .page { padding-top: 24px; }
+      .welcome h1 { font-size: 30px; }
     }
   </style>
 </head>
 
 <body>
   <header class="topbar">
-    <a class="logo" href="for-you.html">ZYV<span>IX</span></a>
-    <div class="top-actions">
-      <span id="account-label" style="font-size:12px;color:#aaa">Loading account…</span>
-      <a class="icon-btn" href="profile.html" aria-label="Profile">👤</a>
+    <div>
+      <div class="logo">ZYVIX</div>
+      <div class="tagline">YOUR GAME. YOUR COMMUNITY.</div>
     </div>
+    <button class="refresh" id="refreshBtn">↻ Refresh</button>
   </header>
 
-  <div class="layout">
-    <aside class="sidebar">
-      <a class="side-link active" href="for-you.html"><span class="side-icon">🏠</span> For You</a>
-      <a class="side-link" href="#discover"><span class="side-icon">🔎</span> Discover</a>
-      <a class="side-link" href="#create-post"><span class="side-icon">➕</span> Create Post</a>
-      <a class="side-link" href="#inbox"><span class="side-icon">💬</span> Inbox</a>
-      <a class="side-link" href="profile.html"><span class="side-icon">👤</span> Profile</a>
+  <main class="page">
+    <section class="welcome">
+      <h1>Welcome to ZYVIX 🎮</h1>
+      <p>Share your gaming moments, meet players, and join the community.</p>
+    </section>
 
-      <div class="side-note">
-        <strong>🎮 Your gaming world</strong>
-        <p>Share your clips, discuss games and connect with other players on ZYVIX.</p>
+    <div id="notice" class="notice"></div>
+
+    <div class="tabs">
+      <button class="tab active" id="allTab">🌍 For You</button>
+      <button class="tab" id="followingTab">👥 Following</button>
+    </div>
+
+    <section class="composer">
+      <div class="section-title">✨ Create a post</div>
+      <textarea id="postContent" maxlength="2000"
+        placeholder="What's happening in your gaming world?"></textarea>
+
+      <div class="field">
+        <select id="gameSelect">
+          <option value="General Gaming">🎮 General Gaming</option>
+          <option value="Free Fire">🔥 Free Fire</option>
+          <option value="Fortnite">🎯 Fortnite</option>
+          <option value="Roblox">🧱 Roblox</option>
+          <option value="Call of Duty Mobile">💥 Call of Duty Mobile</option>
+          <option value="Blood Strike">⚡ Blood Strike</option>
+          <option value="Minecraft">⛏️ Minecraft</option>
+          <option value="Genshin Impact">✨ Genshin Impact</option>
+          <option value="Other">🎮 Other</option>
+        </select>
       </div>
-    </aside>
 
-    <main>
-      <div class="feed-tabs">
-        <button class="feed-tab active" id="for-you-tab">For You</button>
-        <button class="feed-tab" id="following-tab">Following</button>
+      <div class="composer-footer">
+        <span class="muted" id="userStatus">Checking account…</span>
+        <button class="primary" id="publishBtn">Post 🚀</button>
       </div>
+    </section>
 
-      <div id="status">Connecting to ZYVIX…</div>
+    <div class="section-title">🔥 Community feed</div>
+    <div id="feed">
+      <div class="empty">Loading posts…</div>
+    </div>
+  </main>
 
-      <section class="composer" id="create-post">
-        <div class="composer-top">
-          <div class="avatar" id="my-avatar">Z</div>
-          <div>
-            <strong id="composer-name">Your gaming account</strong>
-            <div class="post-meta">Share something with the community</div>
-          </div>
-        </div>
-
-        <textarea id="post-content" maxlength="2000"
-          placeholder="What's happening in your gaming world? 🎮"></textarea>
-
-        <div class="composer-bottom">
-          <select id="post-game" aria-label="Choose game">
-            <option value="General">🎮 General</option>
-            <option value="Free Fire">🔥 Free Fire</option>
-            <option value="Fortnite">🎯 Fortnite</option>
-            <option value="Roblox">🧱 Roblox</option>
-            <option value="Call of Duty Mobile">💥 Call of Duty Mobile</option>
-            <option value="Blood Strike">⚡ Blood Strike</option>
-            <option value="Minecraft">⛏️ Minecraft</option>
-            <option value="Other">🎮 Other game</option>
-          </select>
-          <button class="primary-btn" id="publish-btn">Post ↗</button>
-        </div>
-      </section>
-
-      <section id="feed"></section>
-    </main>
-
-    <aside class="rightbar">
-      <div class="right-card" id="discover">
-        <h3>🔥 Popular games</h3>
-        <span class="game-pill">Free Fire</span>
-        <span class="game-pill">Fortnite</span>
-        <span class="game-pill">Roblox</span>
-        <span class="game-pill">COD Mobile</span>
-        <span class="game-pill">Blood Strike</span>
-      </div>
-      <div class="right-card" id="inbox">
-        <h3>💜 Welcome to ZYVIX</h3>
-        <p>Meet gamers, share your ideas and join the community.</p>
-        <p>Chat and following features can be connected when their database tables are ready.</p>
-      </div>
-    </aside>
-  </div>
-
-  <nav class="mobile-nav">
-    <a class="selected" href="for-you.html"><span class="nav-icon">🏠</span>Home</a>
-    <a href="#discover"><span class="nav-icon">🔎</span>Discover</a>
-    <button id="mobile-create"><span class="nav-icon">➕</span>Create</button>
-    <a href="#inbox"><span class="nav-icon">💬</span>Inbox</a>
-    <a href="profile.html"><span class="nav-icon">👤</span>Profile</a>
+  <nav class="bottom-nav">
+    <a class="nav-item" href="index.html"><span>🏠</span>Home</a>
+    <a class="nav-item active" href="for-you.html"><span>🌍</span>For You</a>
+    <a class="nav-item" href="login.html"><span>👤</span>Account</a>
   </nav>
 
   <script>
-    // IMPORTANT:
-    // Use the exact same Supabase URL and publishable key as index.html.
-    // Never put a service-role secret key in public website code.
+    // Your existing ZYVIX Supabase project.
     const SUPABASE_URL = "https://ncrlagqvaxwncuuwidzc.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_rrFCTlSFqEKwJgTLL-qIPw_5VyE7sTH";
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_rrFCTlSFqEKwJgTLL-qIPw_5VyE7sTH";
 
-    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const db = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
 
+    const $ = (id) => document.getElementById(id);
     let currentUser = null;
-    let profileMap = {};
-    let activeTab = "for-you";
-    let postsCache = [];
+    let followingMode = false;
+    let cachedPosts = [];
 
-    const feed = document.getElementById("feed");
-    const statusBox = document.getElementById("status");
-    const publishBtn = document.getElementById("publish-btn");
+    function showNotice(message) {
+      const notice = $("notice");
+      notice.textContent = message;
+      notice.style.display = "block";
+    }
+
+    function hideNotice() {
+      $("notice").style.display = "none";
+    }
 
     function escapeHTML(value) {
-      return String(value ?? "").replace(/[&<>"']/g, character => ({
+      return String(value ?? "").replace(/[&<>"']/g, (char) => ({
         "&": "&amp;",
         "<": "&lt;",
         ">": "&gt;",
         '"': "&quot;",
         "'": "&#39;"
-      })[character]);
+      })[char]);
     }
 
-    function displayName(userId) {
-      const profile = profileMap[userId];
-      if (profile && profile.username) return profile.username;
-      if (currentUser && currentUser.id === userId) {
-        return currentUser.user_metadata?.username ||
-          currentUser.email?.split("@")[0] || "You";
-      }
-      return "ZYVIX Gamer";
+    function formatDate(value) {
+      if (!value) return "Recently";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "Recently";
+      return date.toLocaleString([], {
+        dateStyle: "medium",
+        timeStyle: "short"
+      });
     }
 
-    function initials(name) {
-      return (name || "Z").trim().slice(0, 1).toUpperCase();
+    function displayName(profile, userId) {
+      return profile?.username ||
+        (userId ? "Player " + userId.slice(0, 6) : "Player");
     }
 
-    function avatarHTML(userId, extraClass = "") {
-      const profile = profileMap[userId] || {};
-      const name = displayName(userId);
-      if (profile.avatar_url) {
-        return `<div class="avatar ${extraClass}">
-          <img src="${escapeHTML(profile.avatar_url)}" alt=""
-          onerror="this.parentElement.textContent='${escapeHTML(initials(name))}'">
-        </div>`;
-      }
-      return `<div class="avatar ${extraClass}">${escapeHTML(initials(name))}</div>`;
-    }
+    async function loadAccount() {
+      const { data, error } = await db.auth.getUser();
 
-    function timeAgo(value) {
-      const seconds = Math.max(0, Math.floor((Date.now() - new Date(value).getTime()) / 1000));
-      if (seconds < 60) return "Just now";
-      if (seconds < 3600) return Math.floor(seconds / 60) + "m ago";
-      if (seconds < 86400) return Math.floor(seconds / 3600) + "h ago";
-      if (seconds < 604800) return Math.floor(seconds / 86400) + "d ago";
-      return new Date(value).toLocaleDateString();
-    }
+      currentUser = data?.user || null;
 
-    async function loadProfiles(userIds) {
-      const ids = [...new Set(userIds)].filter(Boolean);
-      if (!ids.length) return;
+      $("userStatus").textContent = currentUser
+        ? "Signed in as " +
+          (currentUser.email || "player")
+        : "Sign in to post and interact";
 
-      const { data, error } = await db
-        .from("profiles")
-        .select("id, username, avatar_url")
-        .in("id", ids);
-
-      if (!error && data) {
-        data.forEach(profile => profileMap[profile.id] = profile);
-      }
+      if (error) console.warn("Account check:", error.message);
     }
 
     async function loadFeed() {
-      statusBox.textContent = "Loading posts…";
-      feed.innerHTML = "";
+      hideNotice();
+      $("feed").innerHTML = '<div class="empty">Loading posts…</div>';
 
-      const { data: posts, error } = await db
-        .from("posts")
-        .select("id, user_id, content, game, created_at")
-        .order("created_at", { ascending: false })
-        .limit(50);
+      try {
+        const { data: posts, error: postsError } = await db
+          .from("posts")
+          .select("id,user_id,content,game,created_at")
+          .order("created_at", { ascending: false })
+          .limit(50);
 
-      if (error) {
-        statusBox.textContent = "Couldn't load posts. Check your Supabase URL, key, database tables and policies.";
-        feed.innerHTML = `<div class="empty-card">
-          <strong>Unable to load the feed.</strong><br>
-          ${escapeHTML(error.message)}
-        </div>`;
-        return;
-      }
+        if (postsError) throw postsError;
 
-      postsCache = posts || [];
+        const list = posts || [];
+        cachedPosts = list;
 
-      if (postsCache.length === 0) {
-        statusBox.textContent = "Your feed is ready.";
-        feed.innerHTML = `<div class="empty-card">
-          <strong>Welcome to ZYVIX! 🎮</strong><br>
-          There are no posts yet. Create the first gaming post above.
-        </div>`;
-        return;
-      }
+        if (list.length === 0) {
+          $("feed").innerHTML = `
+            <div class="empty">
+              <h3>It's quiet in here 🎮</h3>
+              Be the first player to share something with the community!
+            </div>`;
+          return;
+        }
 
-      await loadProfiles(postsCache.map(post => post.user_id));
+        const userIds = [...new Set(list.map(p => p.user_id).filter(Boolean))];
+        const postIds = list.map(p => p.id);
 
-      const postIds = postsCache.map(post => post.id);
-      const userIds = postsCache.map(post => post.user_id);
+        let profiles = [];
+        let likes = [];
+        let comments = [];
 
-      const [likesResult, commentsResult] = await Promise.all([
-        db.from("likes").select("post_id, user_id").in("post_id", postIds),
-        db.from("comments").select("id, post_id").in("post_id", postIds)
-      ]);
+        if (userIds.length) {
+          const result = await db.from("profiles")
+            .select("id,username,avatar_url")
+            .in("id", userIds);
+          if (result.error) console.warn("Profiles:", result.error.message);
+          profiles = result.data || [];
+        }
 
-      if (likesResult.error || commentsResult.error) {
-        statusBox.textContent = "Posts loaded, but likes or comments could not be loaded. Check the database policies.";
-      } else {
-        statusBox.textContent = `${postsCache.length} recent post${postsCache.length === 1 ? "" : "s"}`;
-      }
+        if (postIds.length) {
+          const likeResult = await db.from("likes")
+            .select("post_id,user_id")
+            .in("post_id", postIds);
+          if (likeResult.error) console.warn("Likes:", likeResult.error.message);
+          likes = likeResult.data || [];
 
-      const likes = likesResult.data || [];
-      const comments = commentsResult.data || [];
+          const commentResult = await db.from("comments")
+            .select("id,post_id,user_id,content,created_at")
+            .in("post_id", postIds)
+            .order("created_at", { ascending: true });
 
-      feed.innerHTML = postsCache.map(post => {
-        const name = displayName(post.user_id);
-        const postLikes = likes.filter(item => item.post_id === post.id);
-        const commentCount = comments.filter(item => item.post_id === post.id).length;
-        const liked = currentUser && postLikes.some(item => item.user_id === currentUser.id);
-        const ownPost = currentUser && post.user_id === currentUser.id;
+          if (commentResult.error) {
+            console.warn("Comments:", commentResult.error.message);
+          } else {
+            comments = commentResult.data || [];
+          }
+        }
 
-        return `
-          <article class="post" data-post-id="${escapeHTML(post.id)}">
-            <div class="post-head">
-              ${avatarHTML(post.user_id)}
-              <div class="post-author">
-                <strong>${escapeHTML(name)}</strong>
-                <div class="post-meta">${escapeHTML(timeAgo(post.created_at))}</div>
-                <span class="game-tag">🎮 ${escapeHTML(post.game || "General")}</span>
+        const profileMap = new Map(profiles.map(p => [p.id, p]));
+        const likeMap = new Map();
+        const commentMap = new Map();
+
+        likes.forEach(like => {
+          if (!likeMap.has(like.post_id)) likeMap.set(like.post_id, []);
+          likeMap.get(like.post_id).push(like);
+        });
+
+        comments.forEach(comment => {
+          if (!commentMap.has(comment.post_id)) {
+            commentMap.set(comment.post_id, []);
+          }
+          commentMap.get(comment.post_id).push(comment);
+        });
+
+        const commentUserIds = [...new Set(
+          comments.map(c => c.user_id).filter(Boolean)
+        )];
+
+        let commentProfiles = [];
+        if (commentUserIds.length) {
+          const result = await db.from("profiles")
+            .select("id,username")
+            .in("id", commentUserIds);
+          commentProfiles = result.data || [];
+        }
+
+        const commentProfileMap = new Map(
+          commentProfiles.map(p => [p.id, p])
+        );
+
+        $("feed").innerHTML = list.map(post => {
+          const profile = profileMap.get(post.user_id);
+          const name = displayName(profile, post.user_id);
+          const avatar = profile?.avatar_url;
+          const postLikes = likeMap.get(post.id) || [];
+          const postComments = commentMap.get(post.id) || [];
+          const liked = !!currentUser && postLikes.some(
+            like => like.user_id === currentUser.id
+          );
+
+          const avatarHTML = avatar
+            ? `<img src="${escapeHTML(avatar)}" alt=""
+                 onerror="this.remove()">`
+            : escapeHTML(name.charAt(0).toUpperCase());
+
+          const commentsHTML = postComments.map(comment => {
+            const commentProfile = commentProfileMap.get(comment.user_id);
+            const commentName = displayName(
+              commentProfile, comment.user_id
+            );
+
+            return `
+              <div class="comment">
+                <strong>${escapeHTML(commentName)}</strong>
+                <div>${escapeHTML(comment.content)}</div>
+                <div class="meta">${escapeHTML(formatDate(comment.created_at))}</div>
+              </div>`;
+          }).join("");
+
+          return `
+            <article class="post" id="post-${escapeHTML(post.id)}">
+              <div class="post-head">
+                <div class="avatar">${avatarHTML}</div>
+                <div>
+                  <div class="author">${escapeHTML(name)}</div>
+                  <div class="meta">${escapeHTML(formatDate(post.created_at))}</div>
+                </div>
+                <span class="game-tag">${escapeHTML(post.game || "Gaming")}</span>
               </div>
-            </div>
 
-            <div class="post-content">${escapeHTML(post.content)}</div>
+              <div class="post-content">${escapeHTML(post.content)}</div>
 
-            <div class="post-actions">
-              <button class="action-btn like-btn ${liked ? "liked" : ""}"
-                data-id="${escapeHTML(post.id)}">
-                ${liked ? "❤️" : "🤍"} ${postLikes.length}
-              </button>
-              <button class="action-btn comments-btn" data-id="${escapeHTML(post.id)}">
-                💬 ${commentCount}
-              </button>
-              <button class="action-btn share-btn" data-id="${escapeHTML(post.id)}">
-                ↗ Share
-              </button>
-              ${ownPost ? `<button class="action-btn delete-btn" data-id="${escapeHTML(post.id)}">🗑️</button>` : ""}
-            </div>
+              <div class="post-actions">
+                <button class="action ${liked ? "liked" : ""}"
+                  data-action="like" data-id="${escapeHTML(post.id)}">
+                  ${liked ? "💜 Liked" : "🤍 Like"} · ${postLikes.length}
+                </button>
+                <button class="action"
+                  data-action="comments" data-id="${escapeHTML(post.id)}">
+                  💬 Comment · ${postComments.length}
+                </button>
+              </div>
 
-            <div class="comments" id="comments-${escapeHTML(post.id)}" hidden>
-              <div class="comment-list">Loading comments…</div>
-              <form class="comment-form" data-id="${escapeHTML(post.id)}">
-                <input class="comment-input" maxlength="1000"
-                  placeholder="${currentUser ? "Write a comment…" : "Log in to comment"}"
-                  ${currentUser ? "" : "disabled"} required>
-                <button class="small-btn" ${currentUser ? "" : "disabled"}>Send</button>
-              </form>
-            </div>
-          </article>`;
-      }).join("");
+              <div class="comments" id="comments-${escapeHTML(post.id)}"
+                   style="display:none">
+                ${commentsHTML || '<div class="muted">No comments yet. Start the conversation!</div>'}
+                <form class="comment-form" data-post="${escapeHTML(post.id)}">
+                  <input name="comment" maxlength="500"
+                    placeholder="Write a comment…" required>
+                  <button class="primary" type="submit">Send</button>
+                </form>
+              </div>
+            </article>`;
+        }).join("");
 
-      attachPostActions();
+        if (followingMode) {
+          showNotice("Following is not connected yet. This feed currently shows community posts from everyone.");
+        }
+      } catch (error) {
+        console.error(error);
+        $("feed").innerHTML = `
+          <div class="empty">
+            <h3>Couldn't load the feed</h3>
+            <p>${escapeHTML(error.message || "Please try again.")}</p>
+            <button class="primary" onclick="loadFeed()">Try again</button>
+          </div>`;
+      }
     }
 
-    function attachPostActions() {
-      document.querySelectorAll(".like-btn").forEach(button => {
-        button.addEventListener("click", () => toggleLike(button.dataset.id));
-      });
+    async function publishPost() {
+      hideNotice();
 
-      document.querySelectorAll(".comments-btn").forEach(button => {
-        button.addEventListener("click", async () => {
-          const panel = document.getElementById("comments-" + button.dataset.id);
-          panel.hidden = !panel.hidden;
-          if (!panel.hidden) await loadComments(button.dataset.id, panel);
-        });
-      });
+      if (!currentUser) {
+        showNotice("Please sign in first, then return here to publish a post.");
+        return;
+      }
 
-      document.querySelectorAll(".comment-form").forEach(form => {
-        form.addEventListener("submit", async event => {
-          event.preventDefault();
-          await submitComment(form.dataset.id, form);
-        });
-      });
+      const content = $("postContent").value.trim();
+      const game = $("gameSelect").value;
 
-      document.querySelectorAll(".share-btn").forEach(button => {
-        button.addEventListener("click", async () => {
-          const post = postsCache.find(item => item.id === button.dataset.id);
-          if (!post) return;
-          const shareText = `${post.content}\n\nShared from ZYVIX`;
-          try {
-            if (navigator.share) {
-              await navigator.share({ title: "ZYVIX post", text: shareText, url: location.href });
-            } else if (navigator.clipboard) {
-              await navigator.clipboard.writeText(shareText + "\n" + location.href);
-              alert("Post copied!");
-            } else {
-              prompt("Copy this post:", shareText + "\n" + location.href);
-            }
-          } catch (error) {
-            if (error.name !== "AbortError") alert("Couldn't share this post.");
-          }
-        });
-      });
+      if (!content) {
+        showNotice("Write something before publishing your post.");
+        return;
+      }
 
-      document.querySelectorAll(".delete-btn").forEach(button => {
-        button.addEventListener("click", async () => {
-          if (!currentUser) return;
-          if (!confirm("Delete this post?")) return;
-          const { error } = await db.from("posts")
-            .delete()
-            .eq("id", button.dataset.id)
-            .eq("user_id", currentUser.id);
-          if (error) alert("Couldn't delete post: " + error.message);
-          else await loadFeed();
+      const button = $("publishBtn");
+      button.disabled = true;
+      button.textContent = "Posting…";
+
+      try {
+        const { error } = await db.from("posts").insert({
+          user_id: currentUser.id,
+          content,
+          game
         });
-      });
+
+        if (error) throw error;
+
+        $("postContent").value = "";
+        showNotice("Your post has been published! 🚀");
+        await loadFeed();
+      } catch (error) {
+        console.error(error);
+        showNotice("Couldn't publish: " + (error.message || "Please try again."));
+      } finally {
+        button.disabled = false;
+        button.textContent = "Post 🚀";
+      }
     }
 
     async function toggleLike(postId) {
       if (!currentUser) {
-        alert("Please log in on the ZYVIX homepage first.");
+        showNotice("Please sign in before liking posts.");
         return;
       }
 
-      const { data: existing, error: findError } = await db
-        .from("likes")
-        .select("post_id")
-        .eq("post_id", postId)
-        .eq("user_id", currentUser.id)
-        .maybeSingle();
+      hideNotice();
 
-      if (findError) {
-        alert("Couldn't check the like: " + findError.message);
-        return;
-      }
-
-      let result;
-      if (existing) {
-        result = await db.from("likes")
-          .delete()
-          .eq("post_id", postId)
-          .eq("user_id", currentUser.id);
-      } else {
-        result = await db.from("likes").insert({
-          post_id: postId,
-          user_id: currentUser.id
-        });
-      }
-
-      if (result.error) {
-        alert("Couldn't update like: " + result.error.message);
-      } else {
-        await loadFeed();
-      }
-    }
-
-    async function loadComments(postId, panel) {
-      const list = panel.querySelector(".comment-list");
-      list.textContent = "Loading comments…";
-
-      const { data: comments, error } = await db
-        .from("comments")
-        .select("id, user_id, content, created_at")
-        .eq("post_id", postId)
-        .order("created_at", { ascending: true });
-
-      if (error) {
-        list.textContent = "Couldn't load comments: " + error.message;
-        return;
-      }
-
-      await loadProfiles((comments || []).map(comment => comment.user_id));
-
-      if (!comments || comments.length === 0) {
-        list.innerHTML = `<div class="post-meta">No comments yet. Start the conversation!</div>`;
-        return;
-      }
-
-      list.innerHTML = comments.map(comment => `
-        <div class="comment">
-          ${avatarHTML(comment.user_id)}
-          <div class="comment-bubble">
-            <strong>${escapeHTML(displayName(comment.user_id))}</strong>
-            ${escapeHTML(comment.content)}
-            <div class="post-meta">${escapeHTML(timeAgo(comment.created_at))}</div>
-          </div>
-        </div>
-      `).join("");
-    }
-
-    async function submitComment(postId, form) {
-      if (!currentUser) {
-        alert("Please log in first.");
-        return;
-      }
-
-      const input = form.querySelector("input");
-      const content = input.value.trim();
-      if (!content) return;
-
-      const button = form.querySelector("button");
-      button.disabled = true;
-
-      const { error } = await db.from("comments").insert({
-        post_id: postId,
-        user_id: currentUser.id,
-        content
-      });
-
-      button.disabled = false;
-
-      if (error) {
-        alert("Couldn't send comment: " + error.message);
-        return;
-      }
-
-      input.value = "";
-      const panel = document.getElementById("comments-" + postId);
-      await loadComments(postId, panel);
-      await loadFeed();
-      panel.hidden = false;
-    }
-
-    publishBtn.addEventListener("click", async () => {
-      if (!currentUser) {
-        alert("Please log in on the ZYVIX homepage first.");
-        location.href = "index.html";
-        return;
-      }
-
-      const input = document.getElementById("post-content");
-      const content = input.value.trim();
-      const game = document.getElementById("post-game").value;
-
-      if (!content) {
-        alert("Write something before posting.");
-        input.focus();
-        return;
-      }
-
-      publishBtn.disabled = true;
-      publishBtn.textContent = "Posting…";
-
-      const { error } = await db.from("posts").insert({
-        user_id: currentUser.id,
-        content,
-        game
-      });
-
-      publishBtn.disabled = false;
-      publishBtn.textContent = "Post ↗";
-
-      if (error) {
-        alert("Couldn't create post: " + error.message);
-        return;
-      }
-
-      input.value = "";
-      await loadFeed();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-
-    document.getElementById("for-you-tab").addEventListener("click", () => {
-      activeTab = "for-you";
-      document.getElementById("for-you-tab").classList.add("active");
-      document.getElementById("following-tab").classList.remove("active");
-      loadFeed();
-    });
-
-    document.getElementById("following-tab").addEventListener("click", () => {
-      activeTab = "following";
-      document.getElementById("following-tab").classList.add("active");
-      document.getElementById("for-you-tab").classList.remove("active");
-      statusBox.textContent = "";
-      feed.innerHTML = `<div class="empty-card">
-        <strong>👥 Following feed</strong><br>
-        The following system has not been connected yet. For now, use For You to see community posts.
-      </div>`;
-    });
-
-    document.getElementById("mobile-create").addEventListener("click", () => {
-      document.getElementById("post-content").focus();
-      document.getElementById("create-post").scrollIntoView({ behavior: "smooth" });
-    });
-
-    async function startApp() {
       try {
-        const { data, error } = await db.auth.getSession();
-        if (error) throw error;
+        const { data: existing, error: findError } = await db
+          .from("likes")
+          .select("post_id,user_id")
+          .eq("post_id", postId)
+          .eq("user_id", currentUser.id)
+          .maybeSingle();
 
-        currentUser = data.session?.user || null;
+        if (findError) throw findError;
 
-        if (currentUser) {
-          const name = currentUser.user_metadata?.username ||
-            currentUser.email?.split("@")[0] || "Gamer";
-
-          document.getElementById("account-label").textContent = name;
-          document.getElementById("composer-name").textContent = name;
-          document.getElementById("my-avatar").textContent = initials(name);
+        if (existing) {
+          const { error } = await db.from("likes")
+            .delete()
+            .eq("post_id", postId)
+            .eq("user_id", currentUser.id);
+          if (error) throw error;
         } else {
-          document.getElementById("account-label").textContent = "Guest";
-          document.getElementById("composer-name").textContent = "Log in to post";
-          statusBox.innerHTML = `You're viewing as a guest. <a style="color:#ed4bff" href="index.html">Log in</a> to create posts, like and comment.`;
+          const { error } = await db.from("likes").insert({
+            post_id: postId,
+            user_id: currentUser.id
+          });
+          if (error) throw error;
         }
 
         await loadFeed();
       } catch (error) {
-        statusBox.textContent = "Couldn't connect: " + error.message;
+        console.error(error);
+        showNotice("Couldn't update like: " + (error.message || "Check your database permissions."));
       }
     }
 
-    db.auth.onAuthStateChange((_event, session) => {
-      currentUser = session?.user || null;
-      if (document.readyState === "complete") loadFeed();
+    async function addComment(postId, content) {
+      if (!currentUser) {
+        showNotice("Please sign in before commenting.");
+        return;
+      }
+
+      const text = content.trim();
+      if (!text) return;
+
+      try {
+        const { error } = await db.from("comments").insert({
+          post_id: postId,
+          user_id: currentUser.id,
+          content: text
+        });
+
+        if (error) throw error;
+        await loadFeed();
+
+        const box = $("comments-" + postId);
+        if (box) box.style.display = "block";
+      } catch (error) {
+        console.error(error);
+        showNotice("Couldn't add comment: " + (error.message || "Check your database permissions."));
+      }
+    }
+
+    $("publishBtn").addEventListener("click", publishPost);
+    $("refreshBtn").addEventListener("click", async () => {
+      await loadAccount();
+      await loadFeed();
     });
 
-    startApp();
+    $("allTab").addEventListener("click", () => {
+      followingMode = false;
+      $("allTab").classList.add("active");
+      $("followingTab").classList.remove("active");
+      loadFeed();
+    });
+
+    $("followingTab").addEventListener("click", () => {
+      followingMode = true;
+      $("followingTab").classList.add("active");
+      $("allTab").classList.remove("active");
+      loadFeed();
+    });
+
+    $("feed").addEventListener("click", async (event) => {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+
+      const postId = button.dataset.id;
+
+      if (button.dataset.action === "like") {
+        await toggleLike(postId);
+      }
+
+      if (button.dataset.action === "comments") {
+        const box = $("comments-" + postId);
+        if (box) {
+          box.style.display = box.style.display === "none" ? "block" : "none";
+        }
+      }
+    });
+
+    $("feed").addEventListener("submit", async (event) => {
+      const form = event.target.closest(".comment-form");
+      if (!form) return;
+
+      event.preventDefault();
+      const input = form.elements.comment;
+      const submitButton = form.querySelector("button");
+      const postId = form.dataset.post;
+
+      submitButton.disabled = true;
+      await addComment(postId, input.value);
+      submitButton.disabled = false;
+    });
+
+    async function start() {
+      await loadAccount();
+      await loadFeed();
+    }
+
+    start();
   </script>
 </body>
 </html>
