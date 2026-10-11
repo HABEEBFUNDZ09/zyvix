@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080a12">
+<title>ZYVIX · For You</title>
+<style>
+:root{--bg:#080a12;--panel:#121522;--text:#f8f8ff;--muted:#b3b6c8;--purple:#a855f7;--cyan:#42e8ff;--line:#ffffff22}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{overflow:hidden}
+.top{height:58px;position:fixed;inset:0 0 auto;z-index:20;display:flex;align-items:center;justify-content:center;background:linear-gradient(#05060ce8,transparent);padding-top:env(safe-area-inset-top)}
+.logo{position:absolute;left:15px;font-weight:950;letter-spacing:2px;font-size:19px;background:linear-gradient(90deg,var(--cyan),var(--purple));color:transparent;background-clip:text}
+.feed-tabs{display:flex;gap:22px;height:100%;align-items:center}
+.feed-tabs button{border:0;background:none;color:#c2c4d1;font-size:14px;font-weight:750;padding:9px 2px;position:relative}
+.feed-tabs button.active{color:#fff}
+.feed-tabs button.active:after{content:"";height:3px;border-radius:9px;background:var(--cyan);position:absolute;bottom:-2px;left:15%;right:15%}
+.search{position:absolute;right:14px;border:0;background:#ffffff18;color:white;border-radius:50%;width:35px;height:35px;font-size:17px}
+.feed{height:100dvh;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior-y:contain;scrollbar-width:none}
+.feed::-webkit-scrollbar{display:none}
+.post{height:100dvh;min-height:540px;position:relative;scroll-snap-align:start;scroll-snap-stop:always;overflow:hidden;background:#101322}
+.art{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(ellipse at 60% 30%,#7c3aed99,transparent 35%),radial-gradient(ellipse at 25% 70%,#0ea5e955,transparent 36%),linear-gradient(140deg,#141629,#080a12 70%)}
+.art:before{content:"";position:absolute;width:78vw;height:78vw;max-width:520px;max-height:520px;border-radius:50%;border:1px solid #ffffff20;box-shadow:0 0 0 35px #ffffff05,0 0 0 75px #ffffff04,0 0 100px #a855f733;transform:rotate(-20deg)}
+.art:after{content:"";position:absolute;width:65%;height:20%;background:#a855f722;filter:blur(40px);bottom:16%;left:18%}
+.art.fire{background:radial-gradient(ellipse at 55% 42%,#fb923c88,transparent 27%),radial-gradient(ellipse at 50% 80%,#ef444466,transparent 36%),linear-gradient(150deg,#2b1022,#090a13 70%)}
+.art.fortnite{background:radial-gradient(ellipse at 50% 38%,#38bdf877,transparent 31%),radial-gradient(ellipse at 75% 70%,#a855f755,transparent 32%),linear-gradient(140deg,#111a39,#090a13 75%)}
+.art.roblox{background:radial-gradient(ellipse at 50% 42%,#f472b677,transparent 30%),radial-gradient(ellipse at 25% 72%,#fb923c55,transparent 30%),linear-gradient(140deg,#29122a,#090a13 75%)}
+.game-art{position:relative;z-index:1;text-align:center;padding:24px;max-width:90%;transform:translateY(-28px)}
+.game-icon{font-size:clamp(74px,18vw,145px);filter:drop-shadow(0 12px 28px #0009);line-height:1.2}
+.game-title{font-size:clamp(32px,9vw,64px);font-weight:1000;letter-spacing:-2px;line-height:1;margin-top:12px;text-shadow:0 4px 24px #0008}
+.game-sub{font-size:12px;letter-spacing:4px;font-weight:800;color:#d6d8ff;margin-top:14px}
+.shade{position:absolute;inset:30% 0 0;background:linear-gradient(transparent,#05060b22 15%,#05060bd9 80%,#05060b 100%)}
+.side{position:absolute;right:12px;bottom:calc(86px + env(safe-area-inset-bottom));z-index:5;display:flex;flex-direction:column;align-items:center;gap:18px}
+.creator{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:18px;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#080a12;border:2px solid white;position:relative;margin-bottom:4px}
+.creator:after{content:"+";position:absolute;bottom:-9px;background:#fe2c55;color:white;border-radius:50%;width:19px;height:19px;display:grid;place-items:center;font-size:15px;font-weight:900}
+.action{border:0;background:none;color:white;display:flex;flex-direction:column;align-items:center;gap:4px;padding:0;min-width:45px;text-shadow:0 2px 7px #000}
+.action .ico{font-size:29px;line-height:1.1;filter:drop-shadow(0 2px 5px #0007)}
+.action small{font-size:11px;font-weight:700}
+.action.liked .ico{color:#ff3f71;animation:pop .18s ease-out}
+.action.saved .ico{color:#ffe66d}
+@keyframes pop{50%{transform:scale(1.25)}}
+.details{position:absolute;z-index:4;left:16px;right:78px;bottom:calc(84px + env(safe-area-inset-bottom));text-shadow:0 2px 10px #000b}
+.tag{display:inline-flex;align-items:center;gap:6px;background:#ffffff19;border:1px solid #ffffff26;padding:6px 9px;border-radius:7px;font-size:11px;font-weight:800;margin-bottom:10px;backdrop-filter:blur(8px)}
+.username{font-weight:850;font-size:15px;margin-bottom:8px}
+.caption{font-size:14px;line-height:1.45;margin:0 0 12px;white-space:pre-line}
+.music{font-size:12px;display:flex;align-items:center;gap:8px;overflow:hidden;white-space:nowrap}
+.music span{display:inline-block;animation:move 8s linear infinite}
+@keyframes move{0%,15%{transform:translateX(0)}85%,100%{transform:translateX(-12%)}}
+.bottom{height:calc(62px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);position:fixed;z-index:25;bottom:0;left:0;right:0;background:#080a12f5;border-top:1px solid #ffffff12;display:flex;align-items:center;justify-content:space-around}
+.navitem{color:#aeb2c6;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;min-width:48px}
+.navitem b{font-size:22px;line-height:1.1}
+.navitem.active{color:white}
+.navitem.active b{color:var(--cyan)}
+.create{font-size:25px!important;width:42px;height:29px;border-radius:9px;background:linear-gradient(90deg,var(--cyan),#fff,var(--purple));color:#080a12!important;display:grid;place-items:center}
+.toast{position:fixed;z-index:40;top:72px;left:50%;transform:translateX(-50%);padding:10px 14px;border-radius:10px;background:#22263a;color:white;font-size:13px;display:none;max-width:85%;text-align:center}
+.toast.show{display:block}
+.comment-panel{position:fixed;z-index:35;left:0;right:0;bottom:0;max-height:65dvh;background:#141827;border-radius:20px 20px 0 0;border:1px solid #ffffff20;padding:18px;display:none}
+.comment-panel.show{display:block}
+.comment-panel h3{margin:0 0 12px}
+.comment-panel p{color:var(--muted);font-size:13px;line-height:1.5}
+.comment-panel button{background:#252a40;color:white;border:0;border-radius:9px;padding:9px 13px}
+@media(min-width:700px){.post{max-width:480px;margin:auto;border-left:1px solid #ffffff12;border-right:1px solid #ffffff12}.top{background:#080a12f0}.bottom{max-width:480px;left:50%;transform:translateX(-50%);border-left:1px solid #ffffff12;border-right:1px solid #ffffff12}.logo{left:max(15px,calc((100vw - 450px)/2))}.search{right:max(14px,calc((100vw - 450px)/2))}}
+</style>
+</head>
+<body>
+<header class="top">
+<div class="logo">ZYVIX</div>
+<div class="feed-tabs">
+<button data-feed="following">Following</button>
+<button class="active" data-feed="foryou">For You</button>
+</div>
+<button class="search" aria-label="Search" id="searchBtn">⌕</button>
+</header>
+
+<div class="toast" id="toast" role="status"></div>
+
+<main class="feed" id="feed" aria-label="For You gaming feed">
+
+<article class="post" data-game="Free Fire">
+<div class="art fire"><div class="game-art"><div class="game-icon">🔥</div><div class="game-title">FREE FIRE</div><div class="game-sub">BOOYAH • CLIP</div></div></div>
+<div class="shade"></div>
+<div class="side">
+<div class="creator">F</div>
+<button class="action like"><span class="ico">♥</span><small class="count">1.2K</small></button>
+<button class="action comment"><span class="ico">●</span><small>Comment</small></button>
+<button class="action share"><span class="ico">↗</span><small>Share</small></button>
+<button class="action save"><span class="ico">★</span><small>Save</small></button>
+</div>
+<div class="details">
+<div class="tag">🎮 FREE FIRE · HIGHLIGHT</div>
+<div class="username">@zyvix_gamer</div>
+<p class="caption">That last-second clutch 😮‍💨🔥 Who's your squad's best rusher? #FreeFire #ZYVIX</p>
+<div class="music">♫ <span>Original sound · ZYVIX gaming clips</span></div>
+</div>
+</article>
+
+<article class="post" data-game="Fortnite">
+<div class="art fortnite"><div class="game-art"><div class="game-icon">⚡</div><div class="game-title">FORTNITE</div><div class="game-sub">BUILD • EDIT • WIN</div></div></div>
+<div class="shade"></div>
+<div class="side">
+<div class="creator">N</div>
+<button class="action like"><span class="ico">♥</span><small class="count">846</small></button>
+<button class="action comment"><span class="ico">●</span><small>Comment</small></button>
+<button class="action share"><span class="ico">↗</span><small>Share</small></button>
+<button class="action save"><span class="ico">★</span><small>Save</small></button>
+</div>
+<div class="details">
+<div class="tag">🎮 FORTNITE · GAMEPLAY</div>
+<div class="username">@buildmode</div>
+<p class="caption">Clean edits take practice. Drop your best Fortnite tip below 👇 #Fortnite #MobileGaming</p>
+<div class="music">♫ <span>Gaming beat · Creator audio</span></div>
+</div>
+</article>
+
+<article class="post" data-game="Roblox">
+<div class="art roblox"><div class="game-art"><div class="game-icon">🧱</div><div class="game-title">ROBLOX</div><div class="game-sub">PLAY • CREATE • SHARE</div></div></div>
+<div class="shade"></div>
+<div class="side">
+<div class="creator">R</div>
+<button class="action like"><span class="ico">♥</span><small class="count">2.4K</small></button>
+<button class="action comment"><span class="ico">●</span><small>Comment</small></button>
+<button class="action share"><span class="ico">↗</span><small>Share</small></button>
+<button class="action save"><span class="ico">★</span><small>Save</small></button>
+</div>
+<div class="details">
+<div class="tag">🎮 ROBLOX · COMMUNITY</div>
+<div class="username">@roblox_world</div>
+<p class="caption">What game should we try next? Tell the ZYVIX community 🎮 #Roblox #GamingCommunity</p>
+<div class="music">♫ <span>Original sound · ZYVIX community</span></div>
+</div>
+</article>
+
+</main>
+
+<nav class="bottom" aria-label="Main navigation">
+<a class="navitem active" href="./for-you.html"><b>⌂</b><span>Home</span></a>
+<a class="navitem" href="./discover.html" data-coming="Discover"><b>⌕</b><span>Discover</span></a>
+<a class="navitem" href="./create.html" data-coming="Create"><b class="create">＋</b><span>Create</span></a>
+<a class="navitem" href="./inbox.html" data-coming="Inbox"><b>✉</b><span>Inbox</span></a>
+<a class="navitem" href="./profile.html"><b>◉</b><span>Profile</span></a>
+</nav>
+
+<section class="comment-panel" id="commentPanel">
+<h3>Comments</h3>
+<p>Comments will appear here when ZYVIX comments are connected to Supabase.</p>
+<button id="closeComments">Close</button>
+</section>
+
+<script>
+const toast=document.getElementById('toast');
+let toastTimer;
+
+function showToast(msg){
+toast.textContent=msg;
+toast.classList.add('show');
+clearTimeout(toastTimer);
+toastTimer=setTimeout(()=>toast.classList.remove('show'),2200);
+}
+
+document.querySelectorAll('.like').forEach(btn=>{
+btn.addEventListener('click',()=>{
+btn.classList.toggle('liked');
+showToast(btn.classList.contains('liked')?'Liked! Demo interaction only':'Like removed');
+});
+});
+
+document.querySelectorAll('.save').forEach(btn=>{
+btn.addEventListener('click',()=>{
+btn.classList.toggle('saved');
+showToast(btn.classList.contains('saved')?'Saved on this device preview':'Removed from saved preview');
+});
+});
+
+document.querySelectorAll('.comment').forEach(btn=>{
+btn.addEventListener('click',()=>{
+document.getElementById('commentPanel').classList.add('show');
+});
+});
+
+document.getElementById('closeComments').addEventListener('click',()=>{
+document.getElementById('commentPanel').classList.remove('show');
+});
+
+document.querySelectorAll('.share').forEach(btn=>{
+btn.addEventListener('click',async()=>{
+try{
+if(navigator.share){
+await navigator.share({title:'ZYVIX Gaming Feed',text:'Check out this gaming post on ZYVIX',url:location.href});
+}else if(navigator.clipboard){
+await navigator.clipboard.writeText(location.href);
+showToast('Page link copied');
+}else{
+showToast('Share is not available in this browser');
+}
+}catch(e){
+if(e.name!=='AbortError')showToast('Could not share right now');
+}
+});
+});
+
+document.querySelectorAll('[data-feed]').forEach(btn=>{
+btn.addEventListener('click',()=>{
+document.querySelectorAll('[data-feed]').forEach(x=>x.classList.toggle('active',x===btn));
+showToast(btn.dataset.feed==='following'?'Following feed will show accounts you follow once connected.':'You are viewing the For You preview');
+});
+});
+
+document.getElementById('searchBtn').addEventListener('click',()=>{
+showToast('Search is coming soon');
+});
+
+document.querySelectorAll('[data-coming]').forEach(a=>{
+a.addEventListener('click',e=>{
+e.preventDefault();
+showToast(a.dataset.coming+' is coming soon');
+});
+});
+</script>
+</body>
+</html>
