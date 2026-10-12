@@ -1,611 +1,480 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#09090f">
-<title>ZYVIX — Social, Your Way</title>
-<meta name="description" content="Discover people, share your world and find your community on ZYVIX.">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta name="theme-color" content="#090b14">
+<meta name="description" content="ZYVIX is your gaming hub for creators, gaming communities, news and esports.">
+<title>ZYVIX — Your Gaming Universe</title>
+
 <style>
-:root {
-  color-scheme: dark;
-  --bg:#09090f;
-  --panel:#12121c;
-  --panel2:#191927;
-  --border:#29293a;
-  --text:#f7f7ff;
-  --muted:#9999af;
-  --purple:#a855f7;
-  --blue:#6366f1;
+:root{
+  --bg:#090b14;
+  --panel:#121626;
+  --panel2:#191f32;
+  --line:#292f45;
+  --text:#f7f8ff;
+  --muted:#a5aec6;
+  --purple:#9164ff;
+  --blue:#38d7ff;
 }
-* { box-sizing:border-box; }
-html { scroll-behavior:smooth; }
-body {
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:95px}
+body{
   margin:0;background:var(--bg);color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 }
-a { color:inherit;text-decoration:none; }
-button,input,textarea,select { font:inherit; }
-button { cursor:pointer;-webkit-tap-highlight-color:transparent; }
-.topbar {
+a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+button,a{-webkit-tap-highlight-color:transparent}
+button{cursor:pointer}
+.wrap{width:min(1180px,90%);margin:auto}
+header{
   position:sticky;top:0;z-index:10;
-  background:#09090ff2;backdrop-filter:blur(18px);
-  border-bottom:1px solid var(--border);
+  background:#090b14ed;backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line)
 }
-.topinner {
-  max-width:1120px;margin:auto;padding:13px 18px;
-  display:flex;align-items:center;justify-content:space-between;gap:15px;
+.nav{
+  min-height:72px;display:flex;align-items:center;
+  justify-content:space-between;gap:16px
 }
-.logo {
-  font-size:27px;font-weight:950;letter-spacing:2px;
-  background:linear-gradient(100deg,#d8b4fe,#818cf8);
-  color:transparent;background-clip:text;-webkit-background-clip:text;
+.logo{font-weight:1000;font-size:27px;letter-spacing:2px}
+.logo span{color:var(--blue)}
+.navlinks{display:flex;align-items:center;gap:22px}
+.navlinks a{font-size:13px;color:var(--muted)}
+.navlinks a:hover{color:var(--blue)}
+.navbtn{
+  background:var(--purple);color:white!important;
+  padding:11px 15px;border-radius:10px;font-weight:800
 }
-.search {
-  flex:1;max-width:380px;
+.menu{
+  display:none;background:var(--panel);color:white;
+  border:1px solid var(--line);padding:9px 12px;border-radius:9px
 }
-.search input {
-  width:100%;padding:11px 15px;border-radius:25px;
-  border:1px solid var(--border);background:var(--panel);
-  color:white;outline:none;
+.hero{padding:76px 0 54px;overflow:hidden}
+.eyebrow{
+  display:inline-flex;gap:8px;align-items:center;
+  color:var(--blue);font-size:12px;font-weight:900;
+  letter-spacing:2px;text-transform:uppercase
 }
-.header-actions { display:flex;align-items:center;gap:10px; }
-.btn {
-  border:0;border-radius:12px;padding:11px 16px;
-  background:linear-gradient(110deg,var(--purple),var(--blue));
-  color:white;font-weight:800;
+.dot{width:8px;height:8px;border-radius:50%;background:#49efb1}
+h1{
+  font-size:clamp(42px,8vw,82px);line-height:1.02;
+  letter-spacing:-3px;margin:22px 0;max-width:850px
 }
-.btn.secondary {
-  background:var(--panel2);border:1px solid var(--border);
+.gradient{
+  background:linear-gradient(100deg,#a88aff,#43ddff);
+  color:transparent;background-clip:text;-webkit-background-clip:text
 }
-.iconbtn {
-  background:var(--panel);border:1px solid var(--border);
-  color:white;border-radius:12px;padding:10px 12px;
+.lead{max-width:640px;color:var(--muted);font-size:17px;line-height:1.8}
+.buttons{display:flex;gap:12px;flex-wrap:wrap;margin:28px 0}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:14px 19px;border-radius:11px;font-weight:850;
+  border:1px solid var(--line);background:var(--panel)
 }
-.wrap { max-width:1120px;margin:auto;padding:23px 18px; }
-.hero {
-  border:1px solid #37304f;border-radius:25px;
-  padding:30px 26px;overflow:hidden;
+.btn.primary{
+  border:0;background:linear-gradient(110deg,var(--purple),#6653ed)
+}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.12)}
+.hero-art{
+  min-height:250px;margin-top:36px;border-radius:22px;
+  border:1px solid #ffffff20;overflow:hidden;position:relative;
   background:
-    radial-gradient(ellipse at 90% 10%,#7c3aed55,transparent 45%),
-    radial-gradient(ellipse at 10% 100%,#4338ca44,transparent 45%),
-    #11111c;
+  radial-gradient(ellipse at 20% 110%,#8b5cf655,transparent 48%),
+  radial-gradient(ellipse at 90% 0%,#06b6d455,transparent 45%),
+  linear-gradient(135deg,#15152d,#0d1726 55%,#25103d);
+  display:flex;align-items:center;padding:35px
 }
-.eyebrow {
-  font-size:11px;font-weight:850;letter-spacing:2px;
-  color:#d8b4fe;text-transform:uppercase;
+.hero-art:after{
+  content:"";position:absolute;width:230px;height:230px;
+  border:1px solid #ffffff35;border-radius:50%;
+  right:10%;top:10%;box-shadow:0 0 0 25px #ffffff08,0 0 0 50px #ffffff05
 }
-.hero h1 { font-size:clamp(32px,6vw,54px);line-height:1.08;margin:13px 0; }
-.gradient {
-  background:linear-gradient(100deg,#d8b4fe,#818cf8);
-  color:transparent;background-clip:text;-webkit-background-clip:text;
+.art-copy{position:relative;z-index:1;max-width:570px}
+.art-copy small{color:var(--blue);font-weight:900;letter-spacing:3px}
+.art-copy strong{display:block;font-size:clamp(30px,5vw,55px);line-height:1.05;margin:12px 0}
+.art-copy p{color:#c5cbe0;max-width:400px}
+section{padding:48px 0}
+.section-head{
+  display:flex;justify-content:space-between;align-items:end;
+  gap:18px;margin-bottom:24px
 }
-.hero p { color:#b7b7ca;line-height:1.7;max-width:570px; }
-.hero-actions { display:flex;gap:10px;flex-wrap:wrap;margin-top:20px; }
-.layout {
-  display:grid;grid-template-columns:220px minmax(0,1fr) 235px;
-  gap:18px;margin-top:24px;align-items:start;
+h2{font-size:clamp(25px,4vw,36px);margin:0 0 8px;letter-spacing:-1px}
+.section-head p,.muted{color:var(--muted);line-height:1.7;margin:0}
+.text-link{color:var(--blue);font-size:13px;font-weight:800}
+.search{
+  width:100%;background:var(--panel);color:white;
+  border:1px solid var(--line);padding:14px;border-radius:12px;
+  outline:none;margin-bottom:16px
 }
-.panel {
-  background:var(--panel);border:1px solid var(--border);
-  border-radius:18px;padding:16px;margin-bottom:15px;
+.search:focus{border-color:var(--purple)}
+.filters{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:22px}
+.filter{
+  color:var(--muted);border:1px solid var(--line);
+  background:var(--panel);padding:9px 13px;border-radius:9px
 }
-.panel h3 { font-size:15px;margin:0 0 13px; }
-.sidebar-title {
-  font-size:11px;text-transform:uppercase;letter-spacing:1.5px;
-  color:var(--muted);margin:0 0 10px 8px;
+.filter.active{color:white;background:#5c3eb0;border-color:#8b5cf6}
+.games{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px
 }
-.menu-item {
-  display:flex;align-items:center;gap:11px;
-  padding:12px;border-radius:12px;color:#c8c8da;font-size:14px;
-  margin:3px 0;
+.game{
+  text-align:left;min-width:0;padding:0;overflow:hidden;
+  border:1px solid var(--line);border-radius:15px;
+  background:var(--panel);color:white;transition:.2s
 }
-.menu-item:hover,.menu-item.active { background:#282039;color:white; }
-.menu-icon { width:23px;text-align:center;font-size:17px; }
-.sectionhead {
-  display:flex;align-items:center;justify-content:space-between;
-  gap:10px;margin:0 0 14px;
+.game:hover{border-color:var(--purple);transform:translateY(-3px)}
+.game-art{
+  aspect-ratio:4/3;display:flex;align-items:center;
+  justify-content:center;font-size:clamp(30px,5vw,48px);
+  background:linear-gradient(135deg,var(--a),#101424 65%,var(--b));
+  position:relative;overflow:hidden
 }
-.sectionhead h2 { font-size:20px;margin:0; }
-.muted { color:var(--muted);font-size:12px;line-height:1.6; }
-.stories {
-  display:flex;gap:13px;overflow-x:auto;padding:3px 1px 15px;
-  scrollbar-width:thin;
+.game-art:after{
+  content:"";position:absolute;width:90px;height:90px;
+  border:1px solid #ffffff35;transform:rotate(35deg);border-radius:22px
 }
-.story {
-  flex:0 0 67px;text-align:center;background:none;border:0;color:white;
-  padding:0;
+.game-art span{position:relative;z-index:1}
+.game-info{padding:13px}
+.game-info strong{font-size:14px;display:block}
+.game-info small{display:block;color:var(--muted);margin-top:5px}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.card{
+  background:var(--panel);border:1px solid var(--line);
+  padding:23px;border-radius:16px;min-width:0
 }
-.storyring {
-  width:61px;height:61px;margin:0 auto 7px;border-radius:50%;
-  padding:3px;background:linear-gradient(140deg,#d946ef,#6366f1,#f59e0b);
+.icon{
+  width:47px;height:47px;display:grid;place-items:center;
+  background:#8b5cf622;border:1px solid #8b5cf655;
+  border-radius:13px;font-size:23px;margin-bottom:18px
 }
-.storyinner {
-  height:100%;width:100%;border-radius:50%;
-  display:grid;place-items:center;background:#20172f;
-  border:2px solid var(--bg);font-size:23px;
+.card h3{margin:0 0 10px;font-size:19px}
+.card p{color:var(--muted);line-height:1.75;font-size:14px}
+.card .text-link{display:inline-block;margin-top:8px}
+.studio-banner{
+  background:radial-gradient(ellipse at 100% 0%,#8b5cf655,transparent 55%),var(--panel);
+  border:1px solid var(--line);border-radius:22px;padding:clamp(23px,5vw,45px);
+  display:flex;align-items:center;justify-content:space-between;gap:25px
 }
-.story small { display:block;overflow:hidden;text-overflow:ellipsis;font-size:11px; }
-textarea,input,select {
-  width:100%;padding:12px;color:white;background:#0c0c14;
-  border:1px solid var(--border);border-radius:12px;outline:none;
+.studio-banner p{color:var(--muted);line-height:1.8;max-width:580px}
+.status{
+  display:inline-block;padding:5px 9px;border-radius:7px;
+  background:#facc1518;color:#facc15;font-size:11px;font-weight:900
 }
-textarea { resize:vertical;min-height:80px; }
-textarea:focus,input:focus,select:focus { border-color:var(--purple); }
-.composerrow {
-  display:flex;align-items:center;gap:10px;margin-bottom:12px;
+.notice{
+  border:1px solid var(--line);border-radius:14px;padding:18px;
+  color:var(--muted);background:#ffffff04;line-height:1.8
 }
-.avatar {
-  width:42px;height:42px;flex:0 0 42px;border-radius:50%;
-  display:grid;place-items:center;font-weight:900;
-  background:linear-gradient(135deg,#9333ea,#4f46e5);
-}
-.composerrow input { border-radius:24px;background:var(--panel2); }
-.composebottom {
-  display:flex;align-items:center;justify-content:space-between;
-  gap:10px;flex-wrap:wrap;margin-top:10px;
-}
-.filters { display:flex;gap:8px;overflow-x:auto;padding-bottom:14px; }
-.filter {
-  flex:0 0 auto;padding:8px 13px;border-radius:20px;
-  background:var(--panel);border:1px solid var(--border);
-  color:#c9c9db;font-size:12px;
-}
-.filter.active { background:#39204e;border-color:var(--purple);color:white; }
-.post {
-  background:var(--panel);border:1px solid var(--border);
-  border-radius:18px;padding:16px;margin-bottom:14px;
-}
-.posthead { display:flex;align-items:center;gap:10px; }
-.postname { font-size:14px;font-weight:800; }
-.posttime { font-size:11px;color:var(--muted);margin-top:4px; }
-.postcategory {
-  display:inline-block;margin-top:12px;padding:5px 9px;
-  border-radius:20px;background:#27203b;color:#d8b4fe;font-size:11px;
-}
-.postcontent { white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7;margin:13px 0; }
-.postactions {
-  display:flex;gap:8px;flex-wrap:wrap;
-  border-top:1px solid var(--border);padding-top:12px;
-}
-.action {
-  padding:8px 11px;background:transparent;color:#c0c0d3;
-  border:1px solid var(--border);border-radius:10px;font-size:12px;
-}
-.action:hover { border-color:var(--purple);color:white; }
-.comments { margin-top:12px;border-top:1px solid var(--border);padding-top:8px; }
-.comment { padding:7px 0;font-size:12px;line-height:1.5;overflow-wrap:anywhere; }
-.comment strong { color:white; }
-.trend {
-  display:flex;justify-content:space-between;gap:8px;
-  padding:11px 0;border-bottom:1px solid var(--border);
-}
-.trend:last-child { border-bottom:0; }
-.trend strong { display:block;font-size:13px; }
-.trend span { font-size:11px;color:var(--muted); }
-.notice { text-align:center;padding:25px 12px;color:var(--muted);font-size:13px;line-height:1.7; }
-.status { margin-top:8px;color:var(--muted);font-size:12px; }
-footer { text-align:center;color:var(--muted);font-size:12px;padding:28px 10px; }
-.mobilebar { display:none; }
-@media(max-width:900px) {
-  .layout { grid-template-columns:190px minmax(0,1fr); }
-  .rightside { display:none; }
-}
-@media(max-width:620px) {
-  .topinner { padding:12px;gap:9px; }
-  .logo { font-size:23px; }
-  .search { max-width:none; }
-  .search input { padding:10px;font-size:12px; }
-  .header-actions .secondary { display:none; }
-  .header-actions .btn { padding:10px;font-size:12px; }
-  .layout { display:block; }
-  .leftside { display:none; }
-  .wrap { padding:15px 11px; }
-  .hero { padding:24px 18px; }
-  .mobilebar {
-    display:flex;position:fixed;bottom:0;left:0;right:0;z-index:20;
-    justify-content:space-around;gap:4px;
-    padding:10px 3px calc(10px + env(safe-area-inset-bottom));
-    background:#10101af7;border-top:1px solid var(--border);
+footer{margin-top:40px;border-top:1px solid var(--line);padding:30px 0}
+.footer-row{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+footer p{font-size:12px;color:var(--muted);line-height:1.8}
+footer a{color:var(--blue)}
+#noGames{color:var(--muted);padding:20px 0}
+@media(max-width:800px){
+  .navlinks{
+    display:none;position:absolute;top:72px;left:0;right:0;
+    background:#0d1020;padding:20px 5%;
+    border-bottom:1px solid var(--line);
+    flex-direction:column;align-items:stretch;gap:18px
   }
-  .mobilebar a { font-size:10px;color:#c7c7d8;text-align:center; }
-  body { padding-bottom:78px; }
+  .navlinks.open{display:flex}
+  .menu{display:block}
+  .games{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cards{grid-template-columns:1fr}
+  .hero{padding-top:53px}
+  .section-head{align-items:start;flex-direction:column}
+  .studio-banner{align-items:start;flex-direction:column}
+  h1{letter-spacing:-2px}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*:before,*:after{transition:none!important}
 }
 </style>
 </head>
+
 <body>
-<header class="topbar">
-  <div class="topinner">
-    <a class="logo" href="index.html">ZYVIX</a>
-    <div class="search">
-      <input id="searchInput" type="search" placeholder="Search posts..." aria-label="Search posts">
-    </div>
-    <div class="header-actions">
-      <a class="btn secondary" href="for-you.html">For You</a>
-      <a class="btn" id="accountLink" href="login.html">Join</a>
-    </div>
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#home" aria-label="ZYVIX home">ZYVIX<span>.</span></a>
+
+    <button class="menu" id="menuBtn" aria-expanded="false"
+      aria-controls="navlinks" aria-label="Toggle navigation">☰</button>
+
+    <nav class="navlinks" id="navlinks">
+      <a href="#games">Games</a>
+      <a href="#community">Community</a>
+      <a href="#news">News</a>
+      <a href="#creators">Creators</a>
+      <a class="navbtn" href="templates.html">Open Creator Studio ↗</a>
+    </nav>
   </div>
 </header>
-<main class="wrap">
-  <section class="hero">
-    <div class="eyebrow">Your world. Your people.</div>
-    <h1>MAKE YOURSELF<br><span class="gradient">AT HOME.</span></h1>
-    <p>Share your moments, discover fresh ideas, follow your interests and connect with people who get you. Welcome to a more social world.</p>
-    <div class="hero-actions">
-      <a class="btn" href="#feed">Explore the feed ↗</a>
-      <a class="btn secondary" href="login.html">Join the community</a>
-    </div>
-  </section>
-  <div class="layout">
-    <aside class="leftside">
-      <div class="panel">
-        <div class="sidebar-title">Discover</div>
-        <a class="menu-item active" href="index.html"><span class="menu-icon">⌂</span>Home feed</a>
-        <a class="menu-item" href="for-you.html"><span class="menu-icon">✦</span>For You</a>
-        <a class="menu-item" href="#stories"><span class="menu-icon">◉</span>Stories</a>
-        <a class="menu-item" href="#categories"><span class="menu-icon">▦</span>Interests</a>
-        <a class="menu-item" href="login.html"><span class="menu-icon">♙</span>My profile</a>
+
+<main id="home">
+  <div class="wrap">
+    <section class="hero">
+      <div class="eyebrow"><span class="dot"></span> YOUR GAMING UNIVERSE</div>
+      <h1>Play your game.<br><span class="gradient">Build your world.</span></h1>
+      <p class="lead">
+        Discover gaming communities, explore creator tools, follow your favourite
+        games and bring your gaming ideas to life — all in one place.
+      </p>
+
+      <div class="buttons">
+        <a class="btn primary" href="#games">Explore games ↓</a>
+        <a class="btn" href="templates.html">🎨 Create a thumbnail</a>
       </div>
-      <div class="panel">
-        <h3>Your community</h3>
-        <p class="muted">Find your people. Share what you love. Be part of the conversation.</p>
-        <a class="btn" style="display:block;text-align:center" href="login.html">Get started</a>
-      </div>
-    </aside>
-    <section id="feed">
-      <div class="sectionhead">
-        <h2>Discover</h2>
-        <span class="muted" id="feedCount">Your community</span>
-      </div>
-      <div class="panel" id="stories">
-        <h3>Quick inspiration</h3>
-        <div class="stories">
-          <button class="story" data-story="Lifestyle"><div class="storyring"><div class="storyinner">🌿</div></div><small>Lifestyle</small></button>
-          <button class="story" data-story="Music"><div class="storyring"><div class="storyinner">🎵</div></div><small>Music</small></button>
-          <button class="story" data-story="Fashion"><div class="storyring"><div class="storyinner">👟</div></div><small>Fashion</small></button>
-          <button class="story" data-story="Sports"><div class="storyring"><div class="storyinner">⚽</div></div><small>Sports</small></button>
-          <button class="story" data-story="Technology"><div class="storyring"><div class="storyinner">💻</div></div><small>Tech</small></button>
-          <button class="story" data-story="Gaming"><div class="storyring"><div class="storyinner">🎮</div></div><small>Gaming</small></button>
-          <button class="story" data-story="Art"><div class="storyring"><div class="storyinner">🎨</div></div><small>Art</small></button>
+
+      <div class="hero-art">
+        <div class="art-copy">
+          <small>CREATE · CONNECT · COMPETE</small>
+          <strong>YOUR NEXT<br>LEVEL STARTS HERE.</strong>
+          <p>From gaming content to esports communities, make ZYVIX your space.</p>
+          <a class="text-link" href="templates.html">ENTER CREATOR STUDIO →</a>
         </div>
       </div>
-      <div class="panel">
-        <h3>Create a post</h3>
-        <div class="composerrow">
-          <div class="avatar" id="myAvatar">Z</div>
-          <input id="quickText" maxlength="2000" placeholder="What's happening in your world?">
-        </div>
-        <textarea id="postContent" maxlength="2000" placeholder="Write something, share an idea or start a conversation..."></textarea>
-        <select id="postCategory" aria-label="Post category">
-          <option value="Lifestyle">🌿 Lifestyle</option>
-          <option value="Music">🎵 Music</option>
-          <option value="Fashion">👟 Fashion</option>
-          <option value="Sports">⚽ Sports</option>
-          <option value="Technology">💻 Technology</option>
-          <option value="Gaming">🎮 Gaming</option>
-          <option value="Art">🎨 Art & Creativity</option>
-          <option value="Education">📚 Education</option>
-          <option value="Entertainment">🎬 Entertainment</option>
-          <option value="Other">🌎 Other</option>
-        </select>
-        <div class="composebottom">
-          <span class="muted" id="accountStatus">Checking account...</span>
-          <button class="btn" id="publishBtn">Publish ↗</button>
-        </div>
-        <div class="status" id="status" role="status"></div>
-      </div>
-      <div id="categories" class="filters">
-        <button class="filter active" data-filter="All">For everyone</button>
-        <button class="filter" data-filter="Lifestyle">Lifestyle</button>
-        <button class="filter" data-filter="Music">Music</button>
-        <button class="filter" data-filter="Fashion">Fashion</button>
-        <button class="filter" data-filter="Sports">Sports</button>
-        <button class="filter" data-filter="Technology">Technology</button>
-        <button class="filter" data-filter="Gaming">Gaming</button>
-        <button class="filter" data-filter="Art">Art</button>
-        <button class="filter" data-filter="Education">Education</button>
-        <button class="filter" data-filter="Other">Other</button>
-      </div>
-      <div id="posts"><div class="notice">Loading your community...</div></div>
     </section>
-    <aside class="rightside">
-      <div class="panel">
-        <h3>Explore interests</h3>
-        <div class="trend"><div><strong>#Lifestyle</strong><span>Everyday inspiration</span></div><span>🌿</span></div>
-        <div class="trend"><div><strong>#Music</strong><span>Sounds and artists</span></div><span>🎵</span></div>
-        <div class="trend"><div><strong>#Technology</strong><span>Ideas and innovation</span></div><span>💡</span></div>
-        <div class="trend"><div><strong>#Creativity</strong><span>Art and expression</span></div><span>🎨</span></div>
+
+    <section id="games">
+      <div class="section-head">
+        <div>
+          <h2>Choose your universe</h2>
+          <p>Explore the games you love.</p>
+        </div>
+        <span class="text-link" id="gameCount">8 categories</span>
       </div>
-      <div class="panel">
-        <h3>Welcome to ZYVIX</h3>
-        <p class="muted">A place for your ideas, interests and everyday moments. Every community starts with people like you.</p>
-        <a class="menu-item" href="for-you.html">Discover more →</a>
+
+      <input class="search" id="gameSearch" type="search"
+        placeholder="Search games and categories..." aria-label="Search games">
+
+      <div class="filters" id="gameFilters">
+        <button class="filter active" data-filter="All">All</button>
+        <button class="filter" data-filter="Battle Royale">Battle Royale</button>
+        <button class="filter" data-filter="Mobile FPS">Mobile FPS</button>
+        <button class="filter" data-filter="Creative">Creative</button>
+        <button class="filter" data-filter="Anime">Anime</button>
       </div>
-    </aside>
+
+      <div class="games" id="gamesGrid">
+        <a class="game" href="templates.html" data-category="Battle Royale"
+          data-search="free fire battle royale mobile">
+          <div class="game-art" style="--a:#6b182c;--b:#f97316"><span>🔥</span></div>
+          <div class="game-info"><strong>Free Fire</strong><small>Battle Royale</small></div>
+        </a>
+
+        <a class="game" href="templates.html" data-category="Battle Royale"
+          data-search="fortnite building battle royale">
+          <div class="game-art" style="--a:#153c88;--b:#9333ea"><span>⚡</span></div>
+          <div class="game-info"><strong>Fortnite</strong><small>Battle Royale</small></div>
+        </a>
+
+        <a class="game" href="templates.html" data-category="Mobile FPS"
+          data-search="call of duty cod mobile fps">
+          <div class="game-art" style="--a:#365314;--b:#ca8a04"><span>🎯</span></div>
+          <div class="game-info"><strong>COD Mobile</strong><small>Mobile FPS</small></div>
+        </a>
+
+        <a class="game" href="templates.html" data-category="Mobile FPS"
+          data-search="blood strike shooter fps">
+          <div class="game-art" style="--a:#7f1d1d;--b:#db2777"><span>💥</span></div>
+          <div class="game-info"><strong>Blood Strike</strong><small>Mobile FPS</small></div>
+        </a>
+
+        <a class="game" href="templates.html" data-category="Creative"
+          data-search="roblox creative games">
+          <div class="game-art" style="--a:#334155;--b:#64748b"><span>🧱</span></div>
+          <div class="game-info"><strong>Roblox</strong><small>Creative worlds</small></div>
+        </a>
+
+        <a class="game" href="templates.html" data-category="Creative"
+          data-search="minecraft survival building">
+          <div class="game-art" style="--a:#14532d;--b:#a16207"><span>🌲</span></div>
+          <div class="game-info"><strong>Minecraft</strong><small>Build & explore</small></div>
+        </a>
+
+        <a class="game" href="templates.html" data-category="Anime"
+          data-search="anime edits characters">
+          <div class="game-art" style="--a:#581c87;--b:#be123c"><span>🌌</span></div>
+          <div class="game-info"><strong>Anime & edits</strong><small>Creator community</small></div>
+        </a>
+
+        <a class="game" href="templates.html" data-category="Creative"
+          data-search="esports tournaments teams">
+          <div class="game-art" style="--a:#164e63;--b:#7c3aed"><span>🏆</span></div>
+          <div class="game-info"><strong>Esports</strong><small>Teams & tournaments</small></div>
+        </a>
+      </div>
+      <p id="noGames" hidden>No categories match your search.</p>
+    </section>
+
+    <section id="creators">
+      <div class="studio-banner">
+        <div>
+          <div class="eyebrow">ZYVIX CREATOR STUDIO</div>
+          <h2 style="margin-top:14px">Turn your ideas into content.</h2>
+          <p>
+            Start with thumbnail templates, customise your headline and colours,
+            and export your design. This is the first part of our growing creator toolkit.
+          </p>
+          <a class="btn primary" href="templates.html">Open Creator Studio ↗</a>
+        </div>
+        <div style="font-size:clamp(50px,10vw,95px)" aria-hidden="true">🎨</div>
+      </div>
+    </section>
+
+    <section id="community">
+      <div class="section-head">
+        <div>
+          <h2>Find your people</h2>
+          <p>A place for players, teams and creators.</p>
+        </div>
+        <span class="status">IN DEVELOPMENT</span>
+      </div>
+
+      <div class="cards">
+        <article class="card">
+          <div class="icon">👥</div>
+          <h3>Gaming community</h3>
+          <p>Connect with players, share your interests and build gaming communities.</p>
+        </article>
+        <article class="card">
+          <div class="icon">🎬</div>
+          <h3>Creator space</h3>
+          <p>Showcase gaming thumbnails, edits, clips and creative projects.</p>
+          <a class="text-link" href="templates.html">Make a thumbnail →</a>
+        </article>
+        <article class="card">
+          <div class="icon">🏆</div>
+          <h3>Esports & teams</h3>
+          <p>Our planned esports area will support teams, events, tournaments and competition.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="news">
+      <div class="section-head">
+        <div>
+          <h2>Gaming news & updates</h2>
+          <p>News is a planned feature; live articles are not connected yet.</p>
+        </div>
+        <span class="status">COMING SOON</span>
+      </div>
+      <div class="notice">
+        📰 <strong style="color:var(--text)">Your gaming news hub is on the roadmap.</strong><br>
+        The next development stage will connect permitted news sources and display
+        dated articles with source links, game filters and upcoming events.
+        No live news is being displayed on this page yet.
+      </div>
+    </section>
+
+    <section id="more">
+      <div class="section-head">
+        <div>
+          <h2>More is on the way</h2>
+          <p>ZYVIX is being built feature by feature.</p>
+        </div>
+      </div>
+      <div class="cards">
+        <article class="card">
+          <div class="icon">💬</div>
+          <h3>Posts & messaging</h3>
+          <p>Planned profiles, posts, comments, likes, follows and private messaging.</p>
+        </article>
+        <article class="card">
+          <div class="icon">🤖</div>
+          <h3>KK AI assistant</h3>
+          <p>Planned AI help for gaming questions, guides and creator ideas.</p>
+        </article>
+        <article class="card">
+          <div class="icon">🛡️</div>
+          <h3>Safety & support</h3>
+          <p>Planned reporting, blocking, moderation and support tools.</p>
+        </article>
+      </div>
+    </section>
   </div>
 </main>
-<nav class="mobilebar">
-  <a href="index.html">⌂<br>Home</a>
-  <a href="#stories">◉<br>Explore</a>
-  <a href="#feed">＋<br>Create</a>
-  <a href="for-you.html">✦<br>For You</a>
-  <a href="login.html">♙<br>Profile</a>
-</nav>
-<footer>ZYVIX © 2026 · Connect with your world.</footer>
+
+<footer>
+  <div class="wrap footer-row">
+    <div>
+      <a class="logo" href="#home">ZYVIX<span>.</span></a>
+      <p>One universe. Every player. Endless possibilities.</p>
+    </div>
+    <div>
+      <p>
+        <a href="#games">Games</a> ·
+        <a href="#community">Community</a> ·
+        <a href="#news">News</a> ·
+        <a href="templates.html">Creator Studio</a>
+      </p>
+      <p>© <span id="year"></span> ZYVIX. Built for the gaming community.</p>
+    </div>
+  </div>
+</footer>
+
 <script>
-/*
-  Keep the existing Supabase project.
-  The current posts.game column stores the selected interest category.
-*/
-const SUPABASE_URL = "https://ncrlagqvaxwncuuwidzc.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_rrFCTlSFqEKwJgTLL-qIPw_5VyE7sTH";
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
-let currentUser = null;
-let allPosts = [];
-let profileMap = {};
-let allLikes = [];
-let allComments = [];
+const menuBtn = document.getElementById("menuBtn");
+const navlinks = document.getElementById("navlinks");
+
+menuBtn.addEventListener("click", () => {
+  const open = navlinks.classList.toggle("open");
+  menuBtn.setAttribute("aria-expanded", String(open));
+  menuBtn.textContent = open ? "✕" : "☰";
+});
+
+navlinks.querySelectorAll("a").forEach(link => {
+  link.addEventListener("click", () => {
+    navlinks.classList.remove("open");
+    menuBtn.setAttribute("aria-expanded", "false");
+    menuBtn.textContent = "☰";
+  });
+});
+
+const search = document.getElementById("gameSearch");
+const grid = document.getElementById("gamesGrid");
+const cards = [...grid.querySelectorAll(".game")];
+const filters = [...document.querySelectorAll("[data-filter]")];
 let activeFilter = "All";
-let searchText = "";
-const $ = id => document.getElementById(id);
-function safe(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[c]));
-}
-function ago(date) {
-  const seconds = Math.max(0, Math.floor((Date.now() - new Date(date).getTime()) / 1000));
-  if (seconds < 60) return "Just now";
-  if (seconds < 3600) return Math.floor(seconds / 60) + "m ago";
-  if (seconds < 86400) return Math.floor(seconds / 3600) + "h ago";
-  return Math.floor(seconds / 86400) + "d ago";
-}
-function tell(message) {
-  $("status").textContent = message;
-}
-async function updateAccount() {
-  const { data, error } = await db.auth.getSession();
-  if (error) console.error(error);
-  currentUser = data?.session?.user ?? null;
-  $("accountStatus").textContent = currentUser
-    ? "You're signed in"
-    : "Sign in to publish, like and comment";
-  $("accountLink").textContent = currentUser ? "Account" : "Join";
-  $("myAvatar").textContent = currentUser
-    ? safe((currentUser.email || "Z").slice(0,1).toUpperCase())
-    : "Z";
-}
-async function loadPosts() {
-  $("posts").innerHTML = '<div class="notice">Loading posts...</div>';
-  const { data, error } = await db
-    .from("posts")
-    .select("id,user_id,content,game,created_at")
-    .order("created_at", { ascending: false })
-    .limit(100);
-  if (error) {
-    $("posts").innerHTML =
-      '<div class="panel notice">Could not load posts. Check your Supabase posts table and permissions.<br><br>' +
-      safe(error.message) + '</div>';
-    $("feedCount").textContent = "Feed unavailable";
-    return;
-  }
-  allPosts = data || [];
-  profileMap = {};
-  allLikes = [];
-  allComments = [];
-  const userIds = [...new Set(allPosts.map(p => p.user_id).filter(Boolean))];
-  const postIds = allPosts.map(p => p.id);
-  if (userIds.length) {
-    const result = await db.from("profiles")
-      .select("id,username,avatar_url")
-      .in("id", userIds);
-    if (!result.error) {
-      for (const profile of (result.data || [])) {
-        profileMap[profile.id] = profile;
-      }
-    }
-  }
-  if (postIds.length) {
-    const likesResult = await db.from("likes")
-      .select("post_id,user_id")
-      .in("post_id", postIds);
-    if (!likesResult.error) allLikes = likesResult.data || [];
-    const commentsResult = await db.from("comments")
-      .select("id,post_id,user_id,content,created_at")
-      .in("post_id", postIds)
-      .order("created_at", { ascending: true });
-    if (!commentsResult.error) allComments = commentsResult.data || [];
-  }
-  renderPosts();
-}
-function renderPosts() {
-  const filtered = allPosts.filter(post => {
-    const category = post.game || "Other";
-    const matchesCategory = activeFilter === "All" || category === activeFilter;
-    const profile = profileMap[post.user_id] || {};
-    const query = searchText.toLowerCase();
-    const matchesSearch = !query ||
-      String(post.content || "").toLowerCase().includes(query) ||
-      String(profile.username || "").toLowerCase().includes(query) ||
-      String(category).toLowerCase().includes(query);
-    return matchesCategory && matchesSearch;
+
+function filterGames() {
+  const term = search.value.toLowerCase().trim();
+  let visible = 0;
+
+  cards.forEach(card => {
+    const matchesText = (
+      card.dataset.search + " " + card.textContent
+    ).toLowerCase().includes(term);
+
+    const matchesFilter =
+      activeFilter === "All" || card.dataset.category === activeFilter;
+
+    const show = matchesText && matchesFilter;
+    card.hidden = !show;
+    if (show) visible++;
   });
-  $("feedCount").textContent = filtered.length + " posts";
-  if (!filtered.length) {
-    $("posts").innerHTML =
-      '<div class="panel notice">No posts found here yet.<br>Be the first to start a conversation! ✨</div>';
-    return;
-  }
-  $("posts").innerHTML = filtered.map(post => {
-    const profile = profileMap[post.user_id] || {};
-    const username = profile.username || "ZYVIX member";
-    const category = post.game || "Other";
-    const likes = allLikes.filter(l => String(l.post_id) === String(post.id));
-    const comments = allComments.filter(c => String(c.post_id) === String(post.id));
-    const liked = !!currentUser && likes.some(l => l.user_id === currentUser.id);
-    const initial = safe(username.slice(0,1).toUpperCase());
-    return `
-      <article class="post">
-        <div class="posthead">
-          <div class="avatar">${initial}</div>
-          <div>
-            <div class="postname">${safe(username)}</div>
-            <div class="posttime">${safe(ago(post.created_at))}</div>
-          </div>
-        </div>
-        <span class="postcategory">${safe(category)}</span>
-        <div class="postcontent">${safe(post.content)}</div>
-        <div class="postactions">
-          <button class="action" data-like="${safe(post.id)}">${liked ? "❤️" : "🤍"} ${likes.length} Likes</button>
-          <button class="action" data-comment="${safe(post.id)}">💬 ${comments.length} Comments</button>
-        </div>
-        ${comments.length ? `
-          <div class="comments">
-            ${comments.slice(-3).map(comment => {
-              const cp = profileMap[comment.user_id] || {};
-              return `<div class="comment"><strong>${safe(cp.username || "Member")}:</strong> ${safe(comment.content)}</div>`;
-            }).join("")}
-          </div>` : ""}
-      </article>`;
-  }).join("");
-  document.querySelectorAll("[data-like]").forEach(button => {
-    button.addEventListener("click", () => toggleLike(button.dataset.like));
-  });
-  document.querySelectorAll("[data-comment]").forEach(button => {
-    button.addEventListener("click", () => addComment(button.dataset.comment));
-  });
+
+  document.getElementById("noGames").hidden = visible !== 0;
+  document.getElementById("gameCount").textContent =
+    visible + (visible === 1 ? " category" : " categories");
 }
-async function publishPost() {
-  if (!currentUser) {
-    alert("Please sign in first.");
-    location.href = "login.html";
-    return;
-  }
-  const content = ($("postContent").value || $("quickText").value).trim();
-  const category = $("postCategory").value;
-  if (!content) {
-    tell("Write something before publishing.");
-    return;
-  }
-  $("publishBtn").disabled = true;
-  tell("Publishing your post...");
-  /*
-    The existing database uses a column named "game".
-    We store the new general-interest category in that column
-    to avoid breaking your current Supabase table.
-  */
-  const { error } = await db.from("posts").insert({
-    user_id: currentUser.id,
-    content: content.slice(0, 2000),
-    game: category
-  });
-  $("publishBtn").disabled = false;
-  if (error) {
-    tell("Couldn't publish: " + error.message);
-    return;
-  }
-  $("postContent").value = "";
-  $("quickText").value = "";
-  tell("Posted successfully!");
-  await loadPosts();
-}
-async function toggleLike(postId) {
-  if (!currentUser) {
-    alert("Please sign in to like posts.");
-    location.href = "login.html";
-    return;
-  }
-  const { data: existing, error: readError } = await db
-    .from("likes")
-    .select("post_id")
-    .eq("post_id", postId)
-    .eq("user_id", currentUser.id)
-    .maybeSingle();
-  if (readError) {
-    alert("Couldn't check like: " + readError.message);
-    return;
-  }
-  let result;
-  if (existing) {
-    result = await db.from("likes")
-      .delete()
-      .eq("post_id", postId)
-      .eq("user_id", currentUser.id);
-  } else {
-    result = await db.from("likes").insert({
-      post_id: postId,
-      user_id: currentUser.id
-    });
-  }
-  if (result.error) {
-    alert("Like failed: " + result.error.message);
-    return;
-  }
-  await loadPosts();
-}
-async function addComment(postId) {
-  if (!currentUser) {
-    alert("Please sign in to comment.");
-    location.href = "login.html";
-    return;
-  }
-  const content = prompt("Write your comment:");
-  if (!content || !content.trim()) return;
-  const { error } = await db.from("comments").insert({
-    post_id: postId,
-    user_id: currentUser.id,
-    content: content.trim().slice(0, 1000)
-  });
-  if (error) {
-    alert("Couldn't add comment: " + error.message);
-    return;
-  }
-  await loadPosts();
-}
-function chooseFilter(filter) {
-  activeFilter = filter;
-  document.querySelectorAll("[data-filter]").forEach(button => {
-    button.classList.toggle("active", button.dataset.filter === filter);
-  });
-  renderPosts();
-}
-document.querySelectorAll("[data-filter]").forEach(button => {
-  button.addEventListener("click", () => chooseFilter(button.dataset.filter));
-});
-document.querySelectorAll("[data-story]").forEach(button => {
+
+search.addEventListener("input", filterGames);
+
+filters.forEach(button => {
   button.addEventListener("click", () => {
-    const category = button.dataset.story;
-    $("postCategory").value = category;
-    chooseFilter(category);
-    $("feed").scrollIntoView({ behavior:"smooth" });
+    activeFilter = button.dataset.filter;
+    filters.forEach(item =>
+      item.classList.toggle("active", item === button)
+    );
+    filterGames();
   });
 });
-$("quickText").addEventListener("input", () => {
-  if ($("quickText").value) $("postContent").value = "";
-});
-$("postContent").addEventListener("input", () => {
-  if ($("postContent").value) $("quickText").value = "";
-});
-$("publishBtn").addEventListener("click", publishPost);
-$("searchInput").addEventListener("input", event => {
-  searchText = event.target.value.trim();
-  renderPosts();
-});
-async function start() {
-  await updateAccount();
-  await loadPosts();
-  db.auth.onAuthStateChange(() => {
-    setTimeout(async () => {
-      await updateAccount();
-      await loadPosts();
-    }, 0);
-  });
-}
-start();
+
+document.getElementById("year").textContent = new Date().getFullYear();
+filterGames();
 </script>
 </body>
 </html>
