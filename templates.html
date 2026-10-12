@@ -1,0 +1,417 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090b14">
+<title>ZYVIX Creator Studio</title>
+
+<style>
+:root {
+  --bg:#090b14;
+  --panel:#121626;
+  --line:#282e43;
+  --text:#f6f7ff;
+  --muted:#a1a9c1;
+  --purple:#8b5cf6;
+  --blue:#38bdf8;
+}
+*{box-sizing:border-box}
+body {
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:system-ui,-apple-system,sans-serif
+}
+header {
+  padding:22px 5%;border-bottom:1px solid var(--line);
+  background:#0d1020;position:sticky;top:0;z-index:5
+}
+.brand{font-size:25px;font-weight:900;letter-spacing:2px}
+.brand span{color:var(--blue)}
+header p{color:var(--muted);margin:5px 0 0;font-size:13px}
+main{max-width:1450px;margin:auto;padding:24px 5%}
+h1{font-size:clamp(26px,5vw,42px);margin:10px 0}
+.muted{color:var(--muted)}
+.toolbar{display:grid;gap:12px;margin:22px 0}
+input,select,button{
+  font:inherit;border-radius:10px;border:1px solid var(--line);
+  padding:12px;background:var(--panel);color:var(--text)
+}
+input,select{width:100%;min-width:0}
+button{cursor:pointer}
+button.primary{background:var(--purple);border-color:var(--purple)}
+button:hover{filter:brightness(1.12)}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+.stat{background:var(--panel);padding:10px 14px;border:1px solid var(--line);border-radius:10px}
+.gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.template{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.thumb{
+  aspect-ratio:16/9;position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:12px;background:linear-gradient(135deg,#30106b,#10182f 60%,#e11d48)
+}
+.thumb:before{
+  content:"";position:absolute;width:60%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,#ffffff4a,transparent 68%);
+  right:-15%;top:-35%
+}
+.thumb:after{
+  content:"";position:absolute;inset:8px;border:1px solid #ffffff45;
+  pointer-events:none
+}
+.thumb .words{position:relative;z-index:1;width:100%;text-shadow:2px 3px 4px #000}
+.thumb .headline{font-size:clamp(15px,3vw,25px);font-weight:1000;line-height:1.05;overflow-wrap:anywhere}
+.thumb .sub{font-size:10px;letter-spacing:2px;margin-top:8px;font-weight:800}
+.thumb .tag{font-size:8px;letter-spacing:2px;margin-bottom:8px}
+.template-info{padding:12px}
+.template-info strong{display:block;font-size:13px}
+.template-info small{color:var(--muted)}
+.actions{display:flex;gap:7px;margin-top:10px}
+.actions button{flex:1;padding:9px;font-size:12px}
+.editor{
+  margin:28px 0;background:var(--panel);border:1px solid var(--line);
+  padding:18px;border-radius:16px
+}
+.editor h2{margin-top:0}
+.editor-grid{display:grid;gap:12px}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+.colour-row{display:flex;gap:10px;align-items:center}
+input[type=color]{height:45px;padding:4px;width:65px}
+#message{min-height:22px;color:#86efac;font-size:13px}
+footer{padding:30px 5%;color:var(--muted);border-top:1px solid var(--line);font-size:12px}
+@media(min-width:700px){
+  .toolbar{grid-template-columns:1.2fr 1fr}
+  .filters{grid-template-columns:repeat(3,1fr)}
+  .gallery{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+  .editor-grid{grid-template-columns:1fr 1fr}
+}
+@media(min-width:1050px){
+  .gallery{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="brand">ZYVIX<span> STUDIO</span></div>
+  <p>Make your next gaming thumbnail stand out.</p>
+</header>
+
+<main>
+  <p class="muted">CREATOR TOOLS / THUMBNAIL DESIGNER</p>
+  <h1>Your next big design starts here.</h1>
+  <p class="muted">Choose a template, customise the words and colours, then export your design.</p>
+
+  <div class="stats">
+    <div class="stat"><strong id="totalCount">120</strong> templates</div>
+    <div class="stat"><strong id="shownCount">120</strong> shown</div>
+    <div class="stat"><strong id="favCount">0</strong> favourites</div>
+  </div>
+
+  <div class="toolbar">
+    <input id="search" placeholder="Search templates..." aria-label="Search templates">
+    <div class="filters">
+      <select id="gameFilter" aria-label="Filter by category">
+        <option value="All">All categories</option>
+        <option>Free Fire</option>
+        <option>Fortnite</option>
+        <option>COD Mobile</option>
+        <option>Blood Strike</option>
+        <option>Anime</option>
+        <option>Esports</option>
+        <option>Gaming News</option>
+        <option>Tutorials</option>
+      </select>
+      <select id="styleFilter" aria-label="Filter by style">
+        <option value="All">All styles</option>
+        <option>Neon</option>
+        <option>Cyber</option>
+        <option>Fire</option>
+        <option>Gold</option>
+        <option>Ice</option>
+      </select>
+      <select id="viewFilter" aria-label="Filter favourites">
+        <option value="All">All templates</option>
+        <option value="Favourites">My favourites</option>
+      </select>
+    </div>
+  </div>
+
+  <section class="editor" id="editor">
+    <h2>Customise your design</h2>
+    <p class="muted">Select a template below to begin editing it.</p>
+    <div class="editor-grid">
+      <div>
+        <label for="headlineInput">Main headline</label>
+        <input id="headlineInput" maxlength="48" value="INSANE CLUTCH">
+      </div>
+      <div>
+        <label for="subtitleInput">Small subtitle</label>
+        <input id="subtitleInput" maxlength="60" value="WATCH UNTIL THE END">
+      </div>
+      <div>
+        <label for="color1">Background colour 1</label>
+        <div class="colour-row"><input id="color1" type="color" value="#30106b"><span class="muted">Main colour</span></div>
+      </div>
+      <div>
+        <label for="color2">Background colour 2</label>
+        <div class="colour-row"><input id="color2" type="color" value="#e11d48"><span class="muted">Accent colour</span></div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="primary" id="updateBtn">Update design</button>
+      <button id="downloadBtn">Export PNG</button>
+    </div>
+    <p id="message" role="status"></p>
+  </section>
+
+  <h2>Template gallery</h2>
+  <p class="muted">Pick a design below. You can favourite it and edit its headline.</p>
+  <div id="gallery" class="gallery"></div>
+  <p id="empty" class="muted" hidden>No templates match your filters.</p>
+</main>
+
+<footer>
+  ZYVIX Creator Studio · Demo template gallery. Game names are category labels.
+  Add only media and artwork you own or have permission to use.
+</footer>
+
+<script>
+const categories = [
+  "Free Fire","Fortnite","COD Mobile","Blood Strike",
+  "Anime","Esports","Gaming News","Tutorials"
+];
+
+const styles = [
+  {name:"Neon",a:"#30106b",b:"#e11d48"},
+  {name:"Cyber",a:"#052e46",b:"#22d3ee"},
+  {name:"Fire",a:"#7f1d1d",b:"#fb923c"},
+  {name:"Gold",a:"#422006",b:"#facc15"},
+  {name:"Ice",a:"#172554",b:"#60a5fa"}
+];
+
+const formats = [
+  {name:"YouTube Thumbnail",ratio:"16/9"},
+  {name:"Gaming Highlight",ratio:"16/9"},
+  {name:"Creator Promo",ratio:"16/9"}
+];
+
+const headlines = [
+  "INSANE CLUTCH","TOP 1","NEW UPDATE","ROAD TO PRO",
+  "EPIC WIN","BEST LOADOUT","BIG REVEAL","RANK PUSH",
+  "UNBELIEVABLE","FINAL ROUND","PRO TIPS","GAME ON"
+];
+
+const subtitles = [
+  "WATCH UNTIL THE END","NEW VIDEO","LET'S GO",
+  "THE ULTIMATE GUIDE","SQUAD HIGHLIGHTS"
+];
+
+const templates = [];
+let id = 0;
+
+categories.forEach((category, ci) => {
+  styles.forEach((style, si) => {
+    formats.forEach((format, fi) => {
+      const index = id++;
+      templates.push({
+        id:index,
+        category,
+        style:style.name,
+        format:format.name,
+        ratio:format.ratio,
+        title:headlines[(ci * 3 + si + fi) % headlines.length],
+        subtitle:subtitles[(ci + si + fi) % subtitles.length],
+        a:style.a,
+        b:style.b
+      });
+    });
+  });
+});
+
+let selected = templates[0];
+let favourites = new Set();
+
+try {
+  favourites = new Set(JSON.parse(localStorage.getItem("zyvixTemplateFavourites") || "[]"));
+} catch (_) {
+  favourites = new Set();
+}
+
+const gallery = document.getElementById("gallery");
+const search = document.getElementById("search");
+const gameFilter = document.getElementById("gameFilter");
+const styleFilter = document.getElementById("styleFilter");
+const viewFilter = document.getElementById("viewFilter");
+const headlineInput = document.getElementById("headlineInput");
+const subtitleInput = document.getElementById("subtitleInput");
+const color1 = document.getElementById("color1");
+const color2 = document.getElementById("color2");
+const message = document.getElementById("message");
+
+function escapeText(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",
+    '"':"&quot;","'":"&#39;"
+  })[char]);
+}
+
+function render() {
+  const term = search.value.toLowerCase().trim();
+
+  const results = templates.filter(t => {
+    const matchesText = [t.category,t.style,t.format,t.title,t.subtitle]
+      .join(" ").toLowerCase().includes(term);
+
+    return matchesText &&
+      (gameFilter.value === "All" || t.category === gameFilter.value) &&
+      (styleFilter.value === "All" || t.style === styleFilter.value) &&
+      (viewFilter.value !== "Favourites" || favourites.has(t.id));
+  });
+
+  document.getElementById("totalCount").textContent = templates.length;
+  document.getElementById("shownCount").textContent = results.length;
+  document.getElementById("favCount").textContent = favourites.size;
+  document.getElementById("empty").hidden = results.length !== 0;
+
+  gallery.innerHTML = results.map(t => `
+    <article class="template">
+      <div class="thumb" style="background:linear-gradient(135deg,${t.a},#111827 58%,${t.b})">
+        <div class="words">
+          <div class="tag">${escapeText(t.category.toUpperCase())}</div>
+          <div class="headline">${escapeText(t.id === selected.id ? headlineInput.value : t.title)}</div>
+          <div class="sub">${escapeText(t.id === selected.id ? subtitleInput.value : t.subtitle)}</div>
+        </div>
+      </div>
+      <div class="template-info">
+        <strong>${escapeText(t.category)} · ${escapeText(t.style)}</strong>
+        <small>${escapeText(t.format)} · Design ${String(t.id + 1).padStart(3,"0")}</small>
+        <div class="actions">
+          <button class="primary" data-use="${t.id}">Edit</button>
+          <button data-fav="${t.id}">${favourites.has(t.id) ? "★ Saved" : "☆ Save"}</button>
+        </div>
+      </div>
+    </article>
+  `).join("");
+}
+
+function selectTemplate(id) {
+  selected = templates.find(t => t.id === id) || templates[0];
+  headlineInput.value = selected.title;
+  subtitleInput.value = selected.subtitle;
+  color1.value = selected.a;
+  color2.value = selected.b;
+  message.textContent = "Selected design " + String(selected.id + 1) + ". Edit it below.";
+  render();
+  document.getElementById("editor").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+gallery.addEventListener("click", event => {
+  const edit = event.target.closest("[data-use]");
+  const fav = event.target.closest("[data-fav]");
+
+  if (edit) selectTemplate(Number(edit.dataset.use));
+
+  if (fav) {
+    const id = Number(fav.dataset.fav);
+    if (favourites.has(id)) favourites.delete(id);
+    else favourites.add(id);
+
+    try {
+      localStorage.setItem("zyvixTemplateFavourites", JSON.stringify([...favourites]));
+    } catch (_) {}
+
+    render();
+  }
+});
+
+[search,gameFilter,styleFilter,viewFilter].forEach(el =>
+  el.addEventListener("input",render)
+);
+
+document.getElementById("updateBtn").addEventListener("click", () => {
+  selected.title = headlineInput.value.trim() || "YOUR HEADLINE";
+  selected.subtitle = subtitleInput.value.trim();
+  selected.a = color1.value;
+  selected.b = color2.value;
+  message.textContent = "Design updated!";
+  render();
+});
+
+function drawText(ctx,text,x,y,maxWidth,fontSize) {
+  ctx.font = "900 " + fontSize + "px system-ui, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  const words = String(text).split(/\s+/);
+  const lines = [];
+  let line = "";
+
+  for (const word of words) {
+    const test = line ? line + " " + word : word;
+    if (ctx.measureText(test).width > maxWidth && line) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = test;
+    }
+  }
+  if (line) lines.push(line);
+
+  const lineHeight = fontSize * 1.08;
+  const startY = y - ((lines.length - 1) * lineHeight) / 2;
+  lines.forEach((textLine,i) => {
+    ctx.fillText(textLine, x, startY + i * lineHeight, maxWidth);
+  });
+}
+
+document.getElementById("downloadBtn").addEventListener("click", () => {
+  const canvas = document.createElement("canvas");
+  canvas.width = 1280;
+  canvas.height = 720;
+  const ctx = canvas.getContext("2d");
+
+  const gradient = ctx.createLinearGradient(0,0,1280,720);
+  gradient.addColorStop(0,color1.value);
+  gradient.addColorStop(0.58,"#111827");
+  gradient.addColorStop(1,color2.value);
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0,0,1280,720);
+
+  const glow = ctx.createRadialGradient(1050,100,20,1050,100,520);
+  glow.addColorStop(0,"#ffffff55");
+  glow.addColorStop(1,"#ffffff00");
+  ctx.fillStyle = glow;
+  ctx.fillRect(0,0,1280,720);
+
+  ctx.strokeStyle = "#ffffff75";
+  ctx.lineWidth = 4;
+  ctx.strokeRect(28,28,1224,664);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.shadowColor = "#000000";
+  ctx.shadowBlur = 18;
+
+  drawText(ctx,selected.category.toUpperCase(),640,190,1100,30);
+  drawText(ctx,headlineInput.value || "YOUR HEADLINE",640,345,1120,82);
+  drawText(ctx,subtitleInput.value || "ZYVIX CREATOR STUDIO",640,510,1100,30);
+
+  ctx.shadowBlur = 0;
+  ctx.font = "bold 18px system-ui, sans-serif";
+  ctx.textAlign = "right";
+  ctx.fillStyle = "#ffffffcc";
+  ctx.fillText("MADE WITH ZYVIX",1215,655);
+
+  const link = document.createElement("a");
+  link.download = "zyvix-thumbnail-" + (selected.id + 1) + ".png";
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+
+  message.textContent = "PNG export started!";
+});
+
+render();
+</script>
+</body>
+</html>
